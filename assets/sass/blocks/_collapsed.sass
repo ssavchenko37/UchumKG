@@ -1,0 +1,48 @@
+.nav-collapsed
+	.header__nav-toggle
+		span
+			em
+				width: 50%
+			&::before, &::after
+				width: 75%
+
+	+r($width_md)
+		.main__nav
+			z-index: 2
+			pointer-events: auto
+			opacity: 1
+
+			.navspace
+				width: $max-nav-width
+				background: rgba(237, 242, 249, 0.95)
+				box-shadow: 0.625rem 0 0.625rem -0.5625rem rgba(0, 0, 0, 0.2)
+
+	+m($min_md)
+		.nav__text
+			overflow: hidden
+			width: 0
+
+		.nav__label
+			gap: 0
+			span
+				overflow: hidden
+				width: 0
+
+		.main__nav
+			width: $min-nav-width
+			min-width: $min-nav-width
+			overflow: hidden
+			&:hover
+				overflow: visible
+				.navspace
+					width: $max-nav-width
+					background: rgba(237, 242, 249, 0.95)
+					box-shadow: 0.625rem 0 0.625rem -0.5625rem rgba(0, 0, 0, 0.2)
+
+				.nav__text
+					width: auto
+						
+				.nav__label
+					gap: 10px
+					span
+						width: auto

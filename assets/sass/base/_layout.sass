@@ -1,0 +1,191 @@
+@import "./vars"
+@import "./mixins"
+
+*, *:before, *:after
+	box-sizing: border-box
+	min-height: 0.001vw
+
+
+body
+	display: flex
+	flex-direction: column
+	background: $colorbg
+	font-size: 16px
+	font-weight: 500
+	line-height: 1.6
+	color: $colortext
+	font-family: "Open Sans", Arial, sans-serif
+	font-optical-sizing: auto
+	width: 100%
+	height: 100%
+	min-height: 100vh
+	overflow-x: hidden
+	-webkit-font-smoothing: antialiased
+	-moz-osx-font-smoothing: grayscale
+
+	&.no-scroll
+		overflow: hidden
+
+.container-fluid
+	max-width: 1540px
+
+.innex
+	.main-row
+		align-items: flex-end
+		justify-content: center
+		min-height: 100vh
+		+m($min_md)
+			align-items: center
+		
+
+img, svg
+	display: block
+	width: 100%
+	height: auto
+
+svg
+	fill: currentColor
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4
+	backface-visibility: hidden
+	font-weight: 500
+	color: $primary
+	margin-top: 0
+	margin-bottom: 0.5rem
+	font-family: 'Montserrat', sans-serif
+	line-height: 1
+
+h1, .h1
+	font-size: 1.5rem
+	+m($min_md)
+		font-size: 1.75rem
+	+m($min_lg)
+		font-size: 1.875rem
+h2, .h2
+	font-size: 1.25rem
+	+m($min_md)
+		font-size: 1.5rem
+	+m($min_lg)
+		font-size: 1.75rem
+
+h3, .h3
+	font-size: 1.125rem
+	+m($min_md)
+		font-size: 1.25rem
+	+m($min_lg)
+		font-size: 1.5rem
+
+h4, .h4
+	font-size: 1rem
+	+m($min_md)
+		font-size: 1.125rem
+	+m($min_lg)
+		font-size: 1.25rem
+
+p
+	font-size: 0.875rem
+	+m($min_md)
+		font-size: 1rem
+
+.hidden-preview
+	display: none
+
+
+.confirm-alert
+	color: #CC0000
+	font-size: 2.25rem
+
+small.form-text
+	display: block
+	margin-top: 0
+	font-size: 0.75rem
+	color: $colorgray
+
+.caption
+	font-weight: 600
+	font-size: 14px
+
+.table
+	th, td
+		font-size:  0.875rem
+	small, .small
+		font-size: 80%
+
+.viewer
+	&.offcanvas.offcanvas-end
+		width: calc(50% + 540px)
+
+	&__close
+		position: absolute
+		top: 15px
+		left: -48px
+		width: 48px
+		height: 38px
+		display: flex
+		align-items: center
+		background: #FFFFFF
+		border-radius: 18px 0 0 18px
+		padding-left: 8px
+
+		.btn-close
+			margin: 0
+
+.short-text
+	display: block
+	max-width: 100%
+	white-space: nowrap
+	overflow: hidden
+	text-overflow: ellipsis
+	font-size: 0.75rem
+
+.where-go-marker
+	position: relative
+	.marker
+		position: absolute
+		top: -50%
+		left: -40px
+		transform: translateY(-120%)
+		padding: 0 6px
+		border-radius: 6px
+		font-size: 0.75rem
+		&.marker--hand
+			background: #bfc8ff
+		&.marker--capital
+			background: #bfffc2
+		&.marker--region
+			background: #fff2bf
+
+
+.loader-dots::after
+	content: ''
+	animation: loading-dots 1.5s steps(4, end) infinite
+
+
+@keyframes loading-dots
+	0%
+		content: ''
+	25%
+		content: '.'
+	50%
+		content: '. .'
+	75%
+		content: '. . .'
+	100%
+		content: ''
+
+.scroll-box::-webkit-scrollbar
+	width: 8px
+
+.scroll-box::-webkit-scrollbar-track
+	background: transparent
+
+.scroll-box::-webkit-scrollbar-thumb
+	background: #888
+	border-radius: 6px
+
+.scroll-box::-webkit-scrollbar-thumb:hover
+	background: #555
+
+.scroll-box
+	scrollbar-width: thin
+	scrollbar-color: #888 transparent

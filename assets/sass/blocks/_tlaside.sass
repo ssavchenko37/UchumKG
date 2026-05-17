@@ -1,0 +1,101 @@
+.tlaside
+	$ad: &
+	z-index: -1
+	position: fixed
+	top: 0
+	left: 0
+	width: 100vw
+	height: 100vh
+
+	&__backdrop
+		z-index: -1
+		position: absolute
+		inset: 0
+		background-color: #333
+		opacity: 0
+		transition: opacity 0.15s linear
+
+	&__close
+		position: absolute
+		top: 15px
+		left: -40px
+		width: 48px
+		height: 38px
+		display: flex
+		align-items: center
+		background: #FFFFFF
+		border-radius: 18px 0 0 18px
+		padding-left: 8px
+		transition: top 0.3s ease-in-out
+
+		.btn-close
+			margin: 0
+
+	&__block
+		position: absolute
+		top: 0
+		bottom: 0
+		right: 0
+		max-width: 100%
+		border-left: 1px solid rgba(0,0,0,0.175)
+		visibility: hidden
+		transform: translateX(100%)
+		background-color: #FFF
+		transition: transform 0.3s ease-in-out, visibility 0.3s ease-in-out
+		
+	&--level1
+		z-index: 1
+		width: calc(50% + 540px)
+
+	&--level2
+		z-index: 2
+		width: calc(50% + 420px)
+	
+	&.show
+		z-index: 1032
+
+	&.show-block1
+		#{$ad}__backdrop
+			z-index: 1
+			opacity: 0.4
+
+		#{$ad}--level1
+			transform: none
+			visibility: visible
+
+	&.show-block2
+		#{$ad}__backdrop
+			z-index: 2
+
+		#{$ad}--level1
+			#{$ad}__close
+				top: 68px
+
+		#{$ad}--level2
+			transform: none
+			visibility: visible
+
+	&__wrap
+		max-height: 100vh
+		overflow: auto
+		overscroll-behavior: contain
+		
+	&__body
+		padding: 1rem 2.25rem 0.5rem		
+
+.modal
+	&-header
+		strong
+			font-size: 1.125rem
+
+	&-warning
+		display: flex
+		align-items: center
+		gap: 20px
+
+		.icon svg
+			height: 36px
+
+		.text
+			padding: 20px 0
+			font-size: 0.875rem

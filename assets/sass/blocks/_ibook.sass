@@ -1,0 +1,32 @@
+.ibook
+	&__header
+		display: flex
+		flex-direction: column
+		+m($min_md)
+			flex-direction: row
+			align-items: center
+			justify-content: space-between
+
+		p 
+			display: none
+			font-size: 0.75rem
+
+			+m($min_md)
+				display: block
+				font-size: 1rem
+
+	&__tutor
+		display: flex
+		align-items: center
+		gap: 1rem
+
+	&__tutor-ava
+		flex: 0 0 4rem
+		+m($min_md)
+			flex: 0 0 6rem
+
+		img
+			border-radius: 50%
+
+	&__tutor-name
+		flex-grow: 1

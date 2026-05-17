@@ -1,0 +1,33 @@
+.innex
+	&__bg
+		z-index: -1
+		position: fixed
+		inset: 0
+		background-image: url("../../images/main-bg.png") 
+		background-repeat: no-repeat
+		background-size: cover
+		background-position: center center
+
+	.card-header
+		position: relative
+		overflow: hidden
+		background: linear-gradient(-45deg, #0E2A5A, #1F4C8F)
+
+		&::before, &::after
+			position: absolute
+			content: ""
+			border-radius: 50%
+
+		&::before
+			height: 332%
+			width: 45%
+			left: -10%
+			top: 0.5625rem
+			background-image: linear-gradient(-45deg, #0E2A5A, #1F4C8F)
+
+		&::after
+			height: 15.625rem
+			width: 80%
+			left: 32%
+			top: -232%
+			background-image: linear-gradient(-45deg, #1F4C8F, #0E2A5A)

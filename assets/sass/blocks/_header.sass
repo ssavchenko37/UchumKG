@@ -1,0 +1,77 @@
+.header
+	&__wrap
+		display: flex
+		padding: 8px 0 10px
+
+	&__lside
+		display: flex
+		align-items: center
+		gap: 0.75rem
+		width: 20%
+		max-width: $max-nav-width
+
+	&__rside
+		display: flex
+		align-items: center
+		justify-content: flex-end
+		flex-grow: 1
+
+		.dropdown-item
+			font-size: 0.875rem
+			font-weight: 400
+			color: $blue
+
+	&__logo
+		width: 40px
+		min-width: 40px
+		height: 40px
+		+m($min_md)
+			width: 46px
+			min-width: 46px
+			height: 46px
+
+	&__nav-toggle
+		.btn
+			display: flex
+			height: 2.5rem
+			width: 2.5rem
+			padding: 0.3125rem 0.625rem
+			margin-left: -0.5rem
+			border: 0
+			border-radius: 2.5rem
+			transition: background-color 0.3s ease-in-out
+			box-shadow: inset 0 0 0 rgba(255, 255, 255, 0)
+
+			&:hover
+				background-color: $blueGray
+
+		span
+			position: relative
+			display: block
+			padding: 0
+			width: 100%
+			height: 0.125rem
+
+			em, &::before, &::after
+				position: absolute
+				left: 0
+				height: 0.125rem
+				width: 100%
+				background-color: $accent
+				transition: all 0.3s ease-in-out
+
+			&::before
+				content: ""
+				top: -0.3125rem
+				
+			&::after
+				content: ""
+				top: 0.3125rem
+		
+	&__user
+		color: $primary
+		font-family: 'Montserrat', sans-serif
+		font-size: 1rem
+		font-weight: 500
+		+m($min_md)
+			font-size: 1.125rem

@@ -1,0 +1,204 @@
+.table 
+	& > :not(caption) > * > *
+		padding: 0.75rem 0.75rem
+		background-color: transparent
+		border-bottom-width: 1px
+	
+	th
+		color: $blue
+		font-family: 'Montserrat', sans-serif
+		font-size: 0.875rem
+	
+	.not-active
+		opacity: 0.5
+
+	.surcharge
+		display: none
+	.not-enough
+		background-color: rgba(220, 53, 69, 0.2)
+
+		.surcharge
+			display: block
+			color: rgba(220, 53, 69)
+
+
+.sticky-tr
+	z-index: 9
+	position: sticky
+	top: 0
+	background-color: $colorbg
+
+.table-frozen
+	overflow: auto
+	width: 100%
+	max-width: calc(100vw - 16px)
+	background: #FFFFFF
+	
+	& > .table
+		table-layout: fixed
+		width: 100%
+		margin-bottom: 0.25rem
+
+	& > .table td
+		width: 50px
+		padding: 0.5rem 0.125rem
+	
+	& > .table > thead > tr > td:first-child,
+	& > .table > tbody > tr > td:first-child
+		position: sticky
+		left: 0
+		z-index: 1
+		width: 30px
+		background: #FFFFFF
+	
+	& > .table > thead > tr > td:nth-child(2),
+	& > .table > tbody > tr > td:nth-child(2)
+		position: sticky
+		left: 30px
+		z-index: 1
+		width: 200px
+		background: #FFFFFF
+		@media (max-width:767px)
+			width: 160px
+			
+			span
+				font-size: 0.75rem
+				white-space: nowrap
+				text-overflow: ellipsis
+
+	& > .table tr:hover
+		& > .table td:first-child
+			background-color: #ececec
+
+	.entered-td
+		padding: 0.1rem
+		input
+			border: 0
+			opacity: 0
+			
+		& > div
+			position: relative
+			
+		.entered-alt
+			position: absolute
+			inset: 0
+			display: flex
+			flex-direction: column
+			align-items: center
+			justify-content: center
+			
+	.bootstrap-datetimepicker-widget
+		td, th
+			font-size: 14px
+
+.table-meta
+	overflow: auto
+	width: 100%
+	margin-top: 1rem
+	background: #FFFFFF
+	
+	& > table
+		table-layout: fixed
+		width: 100%
+		margin-bottom: 0.25rem
+		min-width: 1170px
+		
+	& > table td:first-child
+		position: sticky
+		left: 0
+		z-index: 1
+		width: 30px
+		background: #FFFFFF
+		
+	& > table td:nth-child(2)
+		position: sticky
+		left: 30px
+		z-index: 1
+		width: 200px
+		background: #FFFFFF
+		@media (max-width:767px)
+			width: 160px
+			span
+				font-size: 0.75rem
+				white-space: nowrap
+				text-overflow: ellipsis
+
+	table .meta-tr td
+		position: static
+		z-index: 0
+		font-size: 0.75rem
+		min-width: 52px
+
+.table-frozen, .table-meta
+	.table 
+		tr td:first-child, tr td:nth-child(2)
+			padding: .75rem .5rem
+		td.bg-abs
+			background: rgba(230, 55, 87, 0.2)
+		td.bg-reabs
+			background: rgba(0,210,122, 0.2)
+		
+	.edited b
+		min-width: 48px
+		min-height: 20px
+		max-height: 180px
+		word-break: break-all
+		
+	.final_score
+		font-size: 1rem
+		font-weight: 500
+
+.edited_val
+	position: relative
+	.abs
+		z-index: 100
+		cursor: pointer
+		position: absolute
+		bottom: -12px
+		left: 36px
+		padding: 1px 4px 2px 6px
+		background-color: #FFFFFF
+		border: 1px solid #DDDDDD
+		box-shadow: 2px 2px 4px 0px rgba(0,0,0,0.2)
+		border-radius: 4px
+		display: flex
+		gap: 4px
+		align-items: center
+		&::before
+			content: ''
+			width: 10px
+			height: 10px
+			border: 1px solid #666666
+
+		&::after
+			content: 'нб'
+	em
+		padding-left: 4px
+		font-style: normal
+
+.edited
+	b
+		display: inline-block
+		padding: 2px 4px
+		font-weight: normal
+		cursor: pointer
+
+.edited-topic
+	b
+		font-weight: 400
+			
+	span
+		transform: rotate(270deg)
+		display: inline-block
+		width: 60px
+		height: 100px
+
+.edited_meta.meta_topic
+	writing-mode: sideways-lr
+	overflow: hidden
+
+@for $i from 1 through 20
+	$value: $i * 5
+	
+	.w-#{$value}
+		width: $value * 1%
