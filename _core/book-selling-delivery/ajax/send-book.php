@@ -40,21 +40,21 @@ if ($payment['amount'] < $cost) {
 		<h5 class="mt-2 mb-4">Закрыть продажу</h5>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Филиал:</label>
-			<div class="col-sm-9">
+			<label class="col-sm-4 col-form-label text-end">Филиал:</label>
+			<div class="col-sm-8">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['branch_name']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Книга:</label>
-			<div class="col-sm-9">
+			<label class="col-sm-4 col-form-label text-end">Книга:</label>
+			<div class="col-sm-8">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['title']?> / <?php echo $payment['author']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Цена экземпляра:</label>
+			<label class="col-sm-4 col-form-label text-end">Цена экземпляра:</label>
 			<div class="col">
 				<input type="text" readonly class="form-control-plaintext" value="<?php  echo $payment['price']?>">
 			</div>
@@ -68,49 +68,39 @@ if ($payment['amount'] < $cost) {
 			</div>
 		</div>
 
-		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end <?php echo $amount_color?>">Оплачено:</label>
-			<div class="col">
-				<input type="text" readonly class="form-control-plaintext <?php echo $amount_color?>" id="amount" value="<?php  echo $payment['amount']?>">
+		<div class="row mb-3 border-bottom border-top">
+			<label class="col-sm-3 col-form-label text-end text-success">Оплачено:</label>
+			<div class="col-sm-2">
+				<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $payment['amount']?>">
 			</div>
-			<?php if ($not_enough) { ?>
-			<label for="surcharge" class="col col-form-label text-end <?php echo $amount_color?>">Доплата:</label>
-			<div class="col-sm-5">
-				<input type="text" class="form-control" id="surcharge" name="surcharge" value="">
-				<small class="text-danger">Необходима доплата: <?php echo number_format($surcharge, 2)?></small>
+			<label for="amount" class="col-sm-3 col-form-label text-end text-success">Дата платежа:</label>
+			<div class="col-sm-3">
+				<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $payment['comment']?>">
 			</div>
-			<?php } ?>
 		</div>
 
-		<div class="row mb-3">
-			<label for="comment" class="col-sm-4 col-form-label text-end">Дата и время платежа:</label>
+		<div class="row mb-2">
+			<label class="col-sm-4 col-form-label text-end">Телефон:</label>
 			<div class="col-sm-8">
-				<input type="text" class="form-control form-control-sm" id="comment" name="comment" value="<?php echo $payment['comment']?>">
-			</div>
-		</div>
-
-		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Телефон:</label>
-			<div class="col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['phone']?>">
 			</div>
 		</div>
 		
 		<div class="row mb-2">
-			<label for="delivery_to" class="col-sm-3 col-form-label text-end">Адрес доставки:</label>
+			<label for="delivery_to" class="col-sm-4 col-form-label text-end">Адрес доставки:</label>
 			<div class="col-sm-7">
 				<input type="text" class="form-control" id="delivery_to" name="delivery_to" value="<?php echo $payment['delivery_to']?>">
 			</div>
 		</div>
 		<div class="row mb-2">
-			<label for="for_courier" class="col-sm-3 col-form-label text-end">Комментарий:</label>
+			<label for="for_courier" class="col-sm-4 col-form-label text-end">Комментарий:</label>
 			<div class="col-sm-7">
 				<textarea readonly class="form-control-plaintext"><?php echo $payment['for_courier']?></textarea>
 			</div>
 		</div>
 		
 		<div class="row mt-4">
-			<div class="offset-sm-3 col-sm-9 d-flex justify-content-between">
+			<div class="offset-sm-3 col-sm-8 d-flex justify-content-between">
 				<button type="submit" id="create-order" class="btn btn-primary w-50" <?php if ($not_enough) echo "disabled"?>> Сохранить </button>
 				<button class="btn btn-secondary dismiss-tlaside" type="button" aria-label="Close"> Отменить </button>
 			</div>

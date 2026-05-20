@@ -5,8 +5,10 @@
 /** @var array $orders */
 /** @var array $employee */
 /** @var array $order_id */
+/** @var array $sort_by */
+/** @var array $sort_val */
 ?>
-<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post" id="frm0" name="forMain">
+<form action="/book-sold/" method="post" id="frm0" name="forMain">
 	<input type="hidden" id="tutor_id" name="tutor_id" value="<?php echo $tldata['id']?>">
 	<div class="row align-items-center">
 		<div class="col-md-8">
@@ -14,30 +16,85 @@
 		</div>
 	</div>
 
-	<div class="row py-1">
-		<div class="col col-md-3">
-			<input type="text" class="form-control form-control-sm" id="by_phone" name="by_phone" placeholder="поиск по телефону">
+	<div class="card border border-secondary-subtle">
+		<div class="card-header py-2 bg-light border-bottom border-secondary-subtle">
+			<div class="row">
+				<div class="col">
+					<label class="form-label form-label">Быстрый поиск по: </label>
+				</div>
+				<div class="col">
+					<input type="text" class="form-control form-control-sm" id="by_phone" name="by_phone" placeholder="по телефону">
+				</div>
+				<div class="col">
+					<select class="form-select form-select-sm" id="by_branch" name="by_branch">
+						<option value="0">-- по филиалам</option>
+						<?php echo getOptionsK('', $branches)?>
+					</select>
+				</div>
+				<div class="col">
+					<select class="form-select form-select-sm" id="by_tutor" name="by_tutor">
+						<option value="0">-- по сотрудникам</option>
+						<?php echo getOptionsK('', $tutors)?>
+					</select>
+				</div>
+				<div class="col">
+					<select class="form-select form-select-sm" id="by_delivery" name="by_delivery">
+						<?php echo getOptionsK('', ['-- по типу передачи','Бронь / Доставка','Бронь / На руки','Прямая / На руки'])?>
+					</select>
+				</div>
+				<div class="col text-end">
+					<button class="btn btn-sm btn-secondary" type="button" data-bs-toggle="collapse" href="#collapseCBody" role="button" aria-expanded="false" aria-controls="collapseCBody">
+						Фильтры
+					</button>
+				</div>
+			</div>
+
 		</div>
-		<div class="col col-md-2">
-			<select class="form-select form-select-sm" id="by_branch" name="by_branch">
-				<option value="0">-- по филиалам</option>
-				<?php echo getOptionsK('', $branches)?>
-			</select>
+		<div class="collapse" id="collapseCBody">
+			<div class="card-body py-3">
+				<div class="close-abs">
+					<button type="button" class="btn-close close-card-body" data-bs-toggle="collapse" href="#collapseCBody" role="button" aria-expanded="false" aria-controls="collapseCBody"></button>
+				</div>
+				<div class="row">
+					<label class="col-sm-2 form-label form-label">Сортировать по: </label>
+					<div class="col-sm-3">
+						<div class="status_filter">
+							<label for="sort_by_sale" class="form-label form-label">по дате продажи: </label>
+							<select class="form-control form-control-sm" id="sort_by_sale" name="sort_by_sale">
+								<?php echo getOptionsK($sort_val['sort_by_sale'], $sort_by['sale']) ?>
+							</select>
+						</div>
+					</div>
+					<!-- <div class="col-sm-3">
+						<div class="status_filter">
+							<label for="sort_by_employee" class="form-label form-label-sm">по имени сотрудника: </label>
+							<select class="form-control form-control-sm" id="sort_by_employee" name="sort_by_employee">
+								<?php echo getOptionsK($sort_val['sort_by_employee'], $sort_by['employee']) ?>
+							</select>
+						</div>
+					</div> -->
+					<div class="col-sm-3">
+						<div class="status_filter">
+							<label for="sort_by_paid" class="form-label form-label">по дате оплаты: </label>
+							<select class="form-control form-control-sm" id="sort_by_paid" name="sort_by_paid">
+								<?php echo getOptionsK($sort_val['sort_by_paid'], $sort_by['paid']) ?>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="row mt-3">
+					<div class="col-sm-6 text-start">
+						<a href="/applications/" class="btn btn-sm btn-info">Очистить</a>
+					</div>
+					<div class="col-sm-6 text-end">
+						<button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" href="#collapseCBody" role="button" aria-expanded="false" aria-controls="collapseCBody">
+							Закрыть
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="col col-md-2">
-			<select class="form-select form-select-sm" id="by_tutor" name="by_tutor">
-				<option value="0">-- по сотрудникам</option>
-				<?php echo getOptionsK('', $tutors)?>
-			</select>
-		</div>
-		<div class="col col-md-3">
-			<select class="form-select form-select-sm" id="by_delivery" name="by_delivery">
-				<?php echo getOptionsK('', ['-- по типу передачи','Бронь / Доставка','Бронь / На руки','Прямая / На руки'])?>
-			</select>
-		</div>
-		<!-- <div class="col col-md-1">
-			<button class="btn btn-sm btn-secondary" type="submit">Применить</button>
-		</div> -->
 	</div>
 </form>
 
@@ -98,3 +155,24 @@
 	?>
 	</tbody>
 </table>
+
+<div class="modal fade" id="cancelSaleModal" tabindex="-1" aria-labelledby="cancelSaleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form action="" method="post" id="formCansel" name="formCansel">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="cancelSaleModalLabel">Отменить продажу / доставку</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p class="text-danger"><strong>Внимание!</strong> Данная запись о продаже вернется в состояние брони.</p>
+					<p> Заказ можно потом снова продать из этой брони. <br>Деньги остаются у нас</p>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+					<button type="submit" class="btn btn-danger" data-bs-dismiss="modal" form="order_details">Да, отменить продажу</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

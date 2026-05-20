@@ -1,18 +1,13 @@
 <?php
+require S_ROOT . '/__outsider/book_full/bootstrap.php';
+use Outsider\Book\Services\BookService;
+$BS = new BookService();
+
 $id = $_POST['pid'];
 $mode = $_POST['mod'];
 
-$payment = $DB->selectRow('SELECT r.*
-	, b.title, b.author, b.price
-	, br.name AS branch_name
-	, p.payment_id, p.amount, p.comment
-	FROM ?_bk_payments p
-	JOIN ?_bk_reservations r ON r.reservation_id = p.reservation_id
-	JOIN ?_bk_books b ON b.book_id = r.book_id
-	JOIN ?_bk_branches br ON br.branch_id = r.branch_id
-	WHERE p.payment_id=?'
-	, $id
-);
+$reservation_id = $DB->selectCell('SELECT reservation_id FROM ?_bk_payments WHERE payment_id=?', $id);
+$payment = $BS->getPayment($reservation_id);
 
 $check_delivery = "";
 $check_hand = " checked";
@@ -21,12 +16,12 @@ if (!empty($payment['delivery_to'])) {
 	$check_hand = "";
 }
 
-$cost = $payment['qty']*$payment['price'];
+$fullPrice = $payment['qty']*$payment['price'];
 $surcharge = 0;
 $not_enough = false;
 $amount_color = 'text-success';
-if ($payment['amount'] < $cost) {
-	$surcharge = $cost - $payment['amount'];
+if ($payment['amount'] < $fullPrice) {
+	$surcharge = $fullPrice - $payment['amount'];
 	$not_enough = true;
 	$amount_color = 'text-danger';
 }
@@ -64,26 +59,56 @@ if ($payment['amount'] < $cost) {
 			</div>
 			<label class="col col-form-label text-end">Стоимость:</label>
 			<div class="col">
-				<input type="text" readonly class="form-control-plaintext" id="cost" value="<?php echo $cost?>">
+				<input type="text" readonly class="form-control-plaintext" name="full_price" id="fullPrice" value="<?php echo $fullPrice?>">
 			</div>
 		</div>
 
-		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end <?php echo $amount_color?>">Оплачено:</label>
-			<div class="col">
-				<input type="text" readonly class="form-control-plaintext <?php echo $amount_color?>" id="amount" value="<?php  echo $payment['amount']?>">
+		<?php
+		if ($payment['payment_status'] === "partial") {
+			$remain_amount = $payment['remain_amount'];
+			foreach ($payment['parts'] as $part) {
+				$part_total = $part_total + $part['amount'];
+				?>
+				<div class="row mb-3 border-bottom border-top">
+					<label class="col-sm-3 col-form-label text-end text-success">Оплачено:</label>
+					<div class="col-sm-2">
+						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['amount']?>">
+					</div>
+					<label for="amount" class="col-sm-3 col-form-label text-end text-success">Дата платежа:</label>
+					<div class="col-sm-3">
+						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['part_comment']?>">
+					</div>
+				</div>
+				<?php
+			}
+			$payment['comment'] = "";
+			?>
+			<input type="hidden" id="part_total" value="<?php echo $part_total?>">
+			<?php
+		}
+		?>
+
+		<?php if ($payment['payment_type'] === "single") { ?>
+		<div class="row mb-3">
+			<label for="amount" class="col-sm-3 col-form-label text-end text-success">Оплачено:</label>
+			<div class="col-sm-8">
+				<input type="text" readonly class="form-control text-success" id="amount" name="amount" value="<?php echo $payment['amount']?>">
 			</div>
-			<?php if ($not_enough) { ?>
-			<label for="surcharge" class="col col-form-label text-end <?php echo $amount_color?>">Доплата:</label>
-			<div class="col-sm-5">
-				<input type="text" class="form-control" id="surcharge" name="surcharge" value="">
-				<small class="text-danger">Необходима доплата: <?php echo number_format($surcharge, 2)?></small>
-			</div>
-			<?php } ?>
 		</div>
+		<?php } ?>
+
+		<?php if ($payment['payment_type'] === "partial") { ?>
+		<div class="row mb-3">
+			<label for="amount" class="col-sm-3 col-form-label text-end text-danger">Доплата:</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="amount" name="amount" value="<?php echo $payment['amount']?>">
+				<small class="text-danger">Необходимо: <small id="needed_amount"><?php echo $remain_amount?></small></small>
+			</div>
+		</div>
+		<?php } ?>
 
 		<div class="row mb-3">
-			<label for="comment" class="col-sm-4 col-form-label text-end">Дата и время платежа:</label>
+			<label for="comment" class="col-sm-3 col-form-label text-end">Дата платежа:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control form-control-sm" id="comment" name="comment" value="<?php echo $payment['comment']?>">
 			</div>
@@ -101,8 +126,7 @@ if ($payment['amount'] < $cost) {
 				<textarea readonly class="form-control-plaintext"><?php echo $payment['for_courier']?></textarea>
 			</div>
 		</div>
-	
-		
+
 		<div class="row mt-4">
 			<div class="offset-sm-3 col-sm-9 d-flex justify-content-between">
 				<button type="submit" id="create-order" class="btn btn-primary w-50" <?php if ($not_enough) echo "disabled"?>> Сохранить </button>

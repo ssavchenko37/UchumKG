@@ -34,6 +34,27 @@ class BookService
 		$this->logs = new LogRepository($this->db);
 	}
 
+	public function begin(): void
+	{
+		if (!$this->db->inTransaction()) {
+			$this->db->beginTransaction();
+		}
+	}
+
+	public function commit(): void
+	{
+		if ($this->db->inTransaction()) {
+			$this->db->commit();
+		}
+	}
+
+	public function rollback(): void
+	{
+		if ($this->db->inTransaction()) {
+			$this->db->rollBack();
+		}
+	}
+
 	// private function available(array $s){return $s['qty_total']-$s['qty_reserved']-$s['qty_sold']-$s['qty_defect'];}
 	private function available(array $s){return $s['qty_total']-$s['qty_paid']-$s['qty_sold']-$s['qty_defect'];}
 	private function availableR(array $s){return $s['qty_total']-$s['qty_reserved']-$s['qty_paid']-$s['qty_sold']-$s['qty_defect'];}
@@ -44,7 +65,10 @@ class BookService
 		// 	return;
 		// }
 
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 			if ($reason !== 'receive') {
@@ -70,10 +94,14 @@ class BookService
 				]
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
@@ -88,21 +116,35 @@ class BookService
 
 	public function reserve(int $b, int $br, int $t, int $q, string $phone, string $where, ?string $deliveryTo = null, ?string $forCourier = null)
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 		try{
 			$s=$this->stock->getForUpdate($b,$br);
 			//if($this->available($s)<$q) throw new \Exception("no stock");
 			$this->stock->increaseReserved($b,$br,$q);
 			$id=$this->res->create($b,$br,$t,$q,$phone,$where,$deliveryTo,$forCourier);
 			$this->logs->log('reservation',$id,'create',$t,['qty'=>$q]);
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 			return $id;
-		}catch(\Throwable $e){$this->db->rollBack();throw $e;}
+		}catch(\Throwable $e){
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
+			throw $e;
+		}
 	}
 
 	public function updateReservation(int $reservationId, int $diff, string $phone, int $t, int $br, string $where, ?string $deliveryTo = null, ?string $forCourier = null): void
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 			$res = $this->res->getForUpdate($reservationId);
@@ -135,17 +177,24 @@ class BookService
 				['qty'=>$diff,'phone'=>$phone]
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
 	public function cancelReservation(int $reservationId, int $tutorId): void
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 			$res = $this->res->getForUpdate($reservationId);
@@ -170,17 +219,24 @@ class BookService
 				$tutorId
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
 	public function transfer(int $b, int $from, int $to, int $q, int $t)
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 		try{
 			$s1=$this->stock->getForUpdate($b,$from);
 			$this->stock->getForUpdate($b,$to);
@@ -188,13 +244,23 @@ class BookService
 			$this->stock->decreaseTotal($b,$from,$q);
 			$this->stock->increaseTotal($b,$to,$q);
 			$this->logs->log('transfer',$b,'move',$t,['from'=>$from,'to'=>$to,'qty'=>$q]);
-			$this->db->commit();
-		}catch(\Throwable $e){$this->db->rollBack();throw $e;}
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
+		}catch(\Throwable $e){
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
+			throw $e;
+		}
 	}
 
 	public function defect(int $bookId, int $branchId, int $qty, int $tutorId, ?string $comment = null): int
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 
@@ -228,20 +294,26 @@ class BookService
 				]
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 			return $defectId;
 
 		} catch (\Throwable $e) {
-
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
 	public function updateDefect (int $defectId, int $tutorId, int $qty, ?string $comment = null, ?int $returned = 0): void
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 
@@ -285,18 +357,24 @@ class BookService
 				]
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
-
 	public function sell(int $bookId, int $branchId, float $total_amount, int $tutorId, int $qty, ?int $paymentId = null): int
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 		
 		try {
 			$stock = $this->stock->getForUpdate($bookId, $branchId);
@@ -329,19 +407,26 @@ class BookService
 				['book_id' => $bookId, 'qty' => $qty]
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 			return $orderId;
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
 	public function sellFromReservation(int $reservationId, int $tutorId, float $total_amount, ?string $delivery_to = null, ?int $paymentId = null): int
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 			$res = $this->res->getForUpdate($reservationId);
@@ -402,19 +487,26 @@ class BookService
 				$tutorId
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 			return $orderId;
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
 	public function createPayment(int $reservationId, ?float $amount, ?float $paid_amount, string $method, int $tutorId, ?string $phone = null, ?string $comment = null): int
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 			if ($reservationId > 0) {
@@ -445,24 +537,31 @@ class BookService
 				'method' => $method
 			]);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 			return $paymentId;
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
 	public function updatePayment(int $paymentId, float $surcharge, int $tutorId, ?string $comment = null): void
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 			$payment = $this->payments->getForUpdate($paymentId);
 
-			if ($payment['status'] !== 'confirmed') {
+			if (!in_array($payment['status'],['new','confirmed'])) {
 				throw new \Exception("Invalid payment status");
 			}
 
@@ -470,17 +569,24 @@ class BookService
 
 			$this->logs->log('payment', $paymentId, 'surcharge', $tutorId);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
 	public function confirmPayment(int $paymentId, int $tutorId): void
 	{
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 			$payment = $this->payments->getForUpdate($paymentId);
@@ -493,10 +599,14 @@ class BookService
 
 			$this->logs->log('payment', $paymentId, 'confirm', $tutorId);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 		} catch (\Throwable $e) {
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
@@ -520,13 +630,36 @@ class BookService
 	public function createPartialPayment(int $reservationId, int $tutorId, float $expectedAmount, string $method, ?string $phone = null, ?string $comment = null): int 
 	{
 
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
+			if ($reservationId > 0) {
+				$res = $this->res->getForUpdate($reservationId);
+
+				if ($res['status'] !== 'active') {
+					throw new \Exception("Invalid reservation");
+				}
+
+				// переводим reserved -> paid
+				$this->stock->decreaseReserved(
+					$res['book_id'],
+					$res['branch_id'],
+					$res['qty']
+				);
+
+				$this->stock->increasePaid(
+					$res['book_id'],
+					$res['branch_id'],
+					$res['qty']
+				);
+			}
 
 			$stmt = $this->db->prepare("
 				INSERT INTO tl_bk_payments(reservation_id, tutor_id, amount, expected_amount, paid_amount, method, phone, comment, status)
-				VALUES(?, ?, NULL, ?, 0, ?, ?, ?, 'new')
+				VALUES(?, ?, 0, ?, 0, ?, ?, ?, 'new')
 			");
 
 			$stmt->execute([$reservationId,$tutorId,$expectedAmount,$method,$phone,$comment]);
@@ -539,21 +672,27 @@ class BookService
 				'create_partial'
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 			return $paymentId;
 
 		} catch (\Throwable $e) {
-
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
 
-	public function addPaymentPart(int $paymentId, float $amount, string $method, ?string $comment = null): int 
+	public function addPaymentPart(int $paymentId, int $tutorId, float $amount, string $method, ?string $comment = null): int 
 	{
 
-		$this->db->beginTransaction();
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
 
 		try {
 
@@ -577,7 +716,10 @@ class BookService
 				$paymentId,
 				$amount,
 				$method,
-				$comment
+				$comment,
+				[
+					'tutorId'=> $tutorId
+				]
 			);
 
 			$this->recalculatePayment($paymentId);
@@ -593,13 +735,16 @@ class BookService
 				]
 			);
 
-			$this->db->commit();
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
 
 			return $partId;
 
 		} catch (\Throwable $e) {
-
-			$this->db->rollBack();
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
 			throw $e;
 		}
 	}
@@ -611,20 +756,20 @@ class BookService
 		$paid = $this->paymentParts->getTotal($paymentId);
 
 		$status = 'partial';
+		$amount = 0;
 
 		if ($paid <= 0) {
 			$status = 'new';
 		}
 
-		if (
-			$payment['expected_amount']
-			&& $paid >= $payment['expected_amount']
-		) {
+		if ($payment['expected_amount'] && $paid >= $payment['expected_amount']) {
 			$status = 'confirmed';
+			$amount = $paid;
 		}
 
 		$this->payments->updatePaidAmount(
 			$paymentId,
+			$amount,
 			$paid,
 			$status
 		);
@@ -847,5 +992,94 @@ class BookService
 		}
 
 		return $payment;
+	}
+
+	public function rollbackSale(int $orderId, int $tutorId): void 
+	{
+
+		$ownTransaction = !$this->db->inTransaction();
+		if ($ownTransaction) {
+			$this->db->beginTransaction();
+		}
+
+		try {
+			// ====ORDER=================================
+			$stmt = $this->db->prepare("SELECT * FROM tl_bk_orders WHERE order_id = ? LIMIT 1");
+			$stmt->execute([$orderId]);
+			$order = $stmt->fetch();
+			if (!$order) { throw new \Exception('Order not found'); }
+
+			// ====ORDER ITEM=================================
+			$stmt = $this->db->prepare("SELECT * FROM tl_bk_order_items WHERE order_id = ? LIMIT 1");
+			$stmt->execute([$orderId]);
+			$item = $stmt->fetch();
+			if (!$item) { throw new \Exception('Order item not found'); }
+
+			// ====PAYMENT=================================
+			$stmt = $this->db->prepare("SELECT * FROM tl_bk_payments WHERE payment_id = ? LIMIT 1");
+			$stmt->execute([$order['payment_id']]);
+			$payment = $stmt->fetch();
+
+			// ====RESERVATION=================================
+			$stmt = $this->db->prepare("SELECT * FROM tl_bk_reservations WHERE reservation_id = ? LIMIT 1");
+			$stmt->execute([$payment['reservation_id']]);
+			$reservation = $stmt->fetch();
+			if (!$reservation) {
+				throw new \Exception('Reservation not found');
+			}
+
+			// ====STOCK=================================
+			$stock = $this->stock->getForUpdate($reservation['book_id'], $reservation['branch_id']);
+
+			// ====SOLD=================================
+			$this->db->prepare("
+				UPDATE tl_bk_book_stock
+				SET
+					qty_sold = qty_sold - ?,
+					qty_paid = qty_paid + ?
+				WHERE
+					book_id = ?
+					AND branch_id = ?
+			")->execute([
+				$item['qty'],
+				$item['qty'],
+				$reservation['book_id'],
+				$reservation['branch_id']
+			]);
+
+			// ====RESERVATION -> active=================================
+			$this->db->prepare("UPDATE tl_bk_reservations SET status = 'active' WHERE reservation_id = ?")
+				->execute([$reservation['reservation_id']]);
+
+			// ====PAYMENT -> confirmed=================================
+			$this->db->prepare("UPDATE tl_bk_payments SET status = 'confirmed' WHERE payment_id = ?")
+				->execute([$payment['payment_id']]);
+
+			// ====DELETE ORDER ITEMS=================================
+			$this->db->prepare("DELETE FROM tl_bk_order_items WHERE order_id = ?")
+				->execute([$orderId]);
+
+			// ====DELETE ORDER=================================
+			$this->db->prepare("DELETE FROM tl_bk_orders WHERE order_id = ?")
+				->execute([$orderId]);
+
+			// ====LOG=================================
+			$this->logs->log(
+				'order',
+				$orderId,
+				'rollback_sale',
+				$tutorId
+			);
+
+			if ($ownTransaction) {
+				$this->db->commit();
+			}
+
+		} catch (\Throwable $e) {
+			if ($this->db->inTransaction()) {
+				$this->db->rollBack();
+			}
+			throw $e;
+		}
 	}
 }

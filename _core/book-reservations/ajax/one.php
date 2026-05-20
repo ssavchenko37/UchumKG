@@ -190,7 +190,7 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 
 		<div class="row mb-3">
 			<div class="offset-sm-3 col-sm-8 d-flex justify-content-between">
-				<button type="submit" class="btn btn-primary w-50"> Сохранить </button>
+				<button type="submit" id="create_reserve" class="btn btn-primary w-50"> Сохранить </button>
 				<button class="btn btn-secondary dismiss-tlaside" type="button" aria-label="Close"> Отменить </button>
 			</div>
 		</div>

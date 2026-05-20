@@ -74,15 +74,17 @@ class PaymentRepository
         ")->execute([$paymentId]);
     }
 
-    public function updatePaidAmount(int $paymentId, float $paidAmount, string $status): void 
+    public function updatePaidAmount(int $paymentId, float $mainAmount, float $paidAmount, string $status): void 
     {
         $this->db->prepare("
             UPDATE tl_bk_payments
             SET
+                amount = ?,
                 paid_amount = ?,
                 status = ?
             WHERE payment_id = ?
         ")->execute([
+            $mainAmount,
             $paidAmount,
             $status,
             $paymentId

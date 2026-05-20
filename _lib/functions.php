@@ -96,7 +96,7 @@ function cleanPhone($phone) {
 	if (strpos($phone, '996') === 0) {
 		return '+' . $phone;
 	}
-	return null;
+	return '+000111111111';
 }
 
 /************************************************************************** NAV for Admin with permissions

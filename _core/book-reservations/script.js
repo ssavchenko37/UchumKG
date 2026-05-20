@@ -55,5 +55,29 @@ const pageInit = () => {
 		inputQty.addEventListener('blur', recalcNeeded);
 	}
 
+	const partTotal = document.getElementById('part_total');
+	const btn = document.getElementById('create_reserve');
+	
+	if (btn) {
+		const comment = document.getElementById('comment');
+
+		[inputAmount, comment].forEach(item => {
+			if (item) {
+				item.addEventListener('blur', (event) => {
+					if (inputAmount.value.trim().length > 0) {
+						if (comment.value.trim().length > 0) {
+							btn.disabled = false;
+						} else {
+							btn.disabled = true;
+						}
+					} else {
+						setTimeout(() => {comment.value = '';}, 600);
+						
+					}				
+				});
+			}
+		});
+	}
+
 	setTimeout(paymentDateHandler, 100);
 }

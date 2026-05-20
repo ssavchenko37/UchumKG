@@ -7,18 +7,48 @@ if (($_POST['mode'] ?? '')) {
 	include "action/action.php";
 }
 
-$payments = $DB->select('SELECT r.*
+$payments = $DB->select("SELECT r.*
 	, b.title, b.author, b.price
 	, br.name AS branch_name, br.branch_id
 	, p.payment_id, p.amount, p.comment
-	, (ST.qty_total - ST.qty_sold - ST.qty_defect) AS available
+	, (ST.qty_total - ST.qty_sold - ST.qty_defect) AS available,
+	CASE
+		WHEN p.expected_amount IS NULL
+		THEN 'single'
+		ELSE 'partial'
+	END AS payment_type,
+
+	COUNT(pp.part_id) AS parts_count,
+
+	CASE
+		WHEN p.expected_amount IS NOT NULL
+		THEN IFNULL(SUM(pp.amount), 0)
+		ELSE p.amount
+	END AS paid_sum,
+
+	CASE
+		WHEN p.expected_amount IS NOT NULL
+		THEN GREATEST(
+			p.expected_amount - IFNULL(SUM(pp.amount), 0),
+			0
+		)
+		ELSE 0
+	END AS remain_amount,
+	(
+		ST.qty_total
+		- ST.qty_sold
+		- ST.qty_defect
+	) AS available
+	, pp.comment AS part_comment
 	FROM ?_bk_payments p
 	JOIN ?_bk_reservations r ON r.reservation_id = p.reservation_id
 	JOIN ?_bk_book_stock ST ON ST.book_id = r.book_id AND ST.branch_id = r.branch_id
 	JOIN ?_bk_books b ON b.book_id = r.book_id
 	JOIN ?_bk_branches br ON br.branch_id = r.branch_id
+	LEFT JOIN ?_bk_payment_parts pp ON pp.payment_id = p.payment_id
 	WHERE r.status=? AND p.status IN(?a) AND where_go=?
-	ORDER BY r.created_at'
+	GROUP BY r.reservation_id
+	ORDER BY r.created_at, pp.created_at DESC"
 	, 'active', ['confirmed','partial'], 'hand'
 );
 // p($payments);

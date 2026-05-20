@@ -1,20 +1,24 @@
 "use strict";
 
 const pageInit = () => {
-	const surcharge = document.getElementById('surcharge');
+	const fullPrice = document.getElementById('fullPrice');
+	const partTotal = document.getElementById('part_total');
+	
 	const btn = document.getElementById('create-order');
 	
-	if (surcharge) {
-		const cost = document.getElementById('cost');
+	if (partTotal) {
 		const amount = document.getElementById('amount');
+		const comment = document.getElementById('comment');
 
-		surcharge.addEventListener('input', (e) => {
-			const needed = parseFloat(cost.value);
-			const entered = parseFloat(amount.value) + parseFloat(e.target.value);
-			if (entered >= needed) {
-				btn.disabled = false;
-			} else {
+		[amount, comment].forEach(item => {
+			if (item) {
 				btn.disabled = true;
+				item.addEventListener('blur', (event) => {
+					let sum = parseFloat(amount.value) + parseFloat(partTotal.value);
+					if (sum === parseFloat(fullPrice.value) && comment.value) {
+						btn.disabled = false;
+					}					
+				});
 			}
 		});
 	}

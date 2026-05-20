@@ -51,14 +51,15 @@
 		$data_shortage = ($shortage > 0) ? 1: 2;
 
 		$not_enough = "default";
-		$cost = $r['qty']*$r['price'];
+		$fullPrice = $r['qty']*$r['price'];
 		$surcharge = 0;
 		$amount_color = 'text-success';
-		if ($r['amount'] < $cost) {
-			$surcharge = $cost - $r['amount'];
+		if ($r['amount'] < $fullPrice) {
+			$surcharge = $fullPrice - $r['amount'];
 			$not_enough = "not-enough";
 			$amount_color = 'text-danger';
-		}	
+		}
+		$paid_date = (empty($r['part_comment'])) ?$r['comment']: $r['part_comment'];
 		?>
 		<tr class="rws <?php echo $tr_class?> <?php echo $not_enough?>" <?php if ($data_shortage == 1) { echo "style='opacity: 0.5'"; }?>
 			data-phone="<?php echo $r['phone']?>"
@@ -74,12 +75,12 @@
 				<strong class="text-danger"><?php if ($shortage > 0) { echo " / -" . $shortage; } ?></strong>
 			</td>
 			<td class="align-middle text-center">
-				<strong class="text-success"><?php echo number_format($cost, 2);?></strong>
+				<strong class="text-success"><?php echo number_format($fullPrice, 2);?></strong>
 			</td>
 			<td class="align-middle text-center">
-				<strong class="<?php echo $amount_color?>"><?php echo $r['amount'];?></strong>
+				<strong class="<?php echo $amount_color?>"><?php echo $r['paid_sum'];?></strong>
 				<small class="surcharge">доплата: <?php echo $surcharge?></small>
-				<br><small style="white-space: nowrap;"><?php echo $r['comment']?></small>
+				<small style="white-space: nowrap;"><?php echo $paid_date?></small>
 			</td>
 			<td class="align-middle">
 				<?php

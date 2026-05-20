@@ -1,4 +1,5 @@
 <?php
+/** @var array $tldata */
 $id = $_POST['pid'];
 
 $tmp_tutors = $DB->selectCol('SELECT tutor_id AS ARRAY_KEY, name FROM ?_tutors');
@@ -25,8 +26,10 @@ $delivery_address = (empty($order['delivery_to'])) ? "На руки": $order['de
 
 ?>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" id="order_details" enctype="multipart/form-data">
 	<input type="hidden" name="pid" value="<?php echo $id?>">
+	<input type="hidden" name="mode" value="edit_order">
+	
 
 	<div class="col-sm-12 offset-md-1 col-md-10 col-lg-9 col-xl-8">
 		<h5 class="mt-2 mb-5"><?php echo $sTTL?></h5>
@@ -95,6 +98,15 @@ $delivery_address = (empty($order['delivery_to'])) ? "На руки": $order['de
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order['phone']?>">
 			</div>
 		</div>
+
+		<?php if ($tldata['usr']['root'] === 1) { ?>
+		<div class="row mb-3">
+			<label class="col-sm-9 col-form-label text-end">Отменить продажу:</label>
+			<div class="col-sm-3 text-end">
+				<button class="btn btn-sm btn-danger" type="button" id="cancel_sale"> <i class="fa-solid fa-rotate-left"></i>&nbsp;Отменить </button>
+			</div>
+		</div>
+		<?php } ?>
 
 		<div class="row mb-3">
 			<label for="for_courier" class="col-sm-3 col-form-label text-end">Комментарий:</label>

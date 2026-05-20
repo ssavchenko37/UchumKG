@@ -3,27 +3,43 @@
 
 $id = $_POST['pid'];
 $mode = $_POST['mode'];
+$fullPrice = $_POST['full_price'];
+
 $admin_id = $tldata['id'];
 
+
 if ($mode === 'order') {
-	$payment = $DB->selectRow('SELECT r.reservation_id, r.book_id, r.qty, r.phone, r.created_at, r.expires_at
-		, b.title, b.author, b.price
-		, br.branch_id, br.name AS branch_name
-		, p.payment_id, p.amount, p.comment
-		FROM ?_bk_payments p
-		JOIN ?_bk_reservations r ON r.reservation_id = p.reservation_id
-		JOIN ?_bk_books b ON b.book_id = r.book_id
-		JOIN ?_bk_branches br ON br.branch_id = r.branch_id
-		WHERE p.payment_id=?'
+	$exist = $DB->selectRow('SELECT R.*, P.payment_id, P.amount, P.comment, P.expected_amount, P.paid_amount 
+		FROM ?_bk_reservations R
+		JOIN ?_bk_payments P ON R.reservation_id = P.reservation_id
+		WHERE P.payment_id=?'
 		, $id
 	);
 
-	if (($_POST['surcharge'] ?? '')) {
-		$BS->updatePayment($payment['payment_id'], $_POST['surcharge'], $admin_id, $_POST['comment']);
-		$payment['amount'] = $DB->selectCell('SELECT amount FROM ?_bk_payments WHERE payment_id=?', $id);
-	}
+	$BS->begin();
 
-	$orderId = $BS->sellFromReservation($payment['reservation_id'], $admin_id, $payment['amount'], $_POST['delivery_to'], $payment['payment_id']);
+	try {
+
+		if ($_POST['amount'] > 0) {
+			if ($exist['expected_amount'] > 0) {
+				$partId = $BS->addPaymentPart($exist['payment_id'], $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
+			} else {
+				$BS->updatePayment($exist['payment_id'], $_POST['amount'], $admin_id, $_POST['comment']);
+			}
+		}
+
+		$payment = $DB->selectRow('SELECT * FROM ?_bk_payments WHERE payment_id=?', $exist['payment_id']);
+
+		$orderId = $BS->sellFromReservation($exist['reservation_id'], $admin_id, $payment['amount'], $_POST['delivery_to'], $exist['payment_id']);
+
+		$BS->commit();
+
+	} catch (\Throwable $e) {
+
+		$BS->rollback();
+
+		throw $e;
+	}
 
 	$request = $TL->request_encode('order_id', $orderId);
 
