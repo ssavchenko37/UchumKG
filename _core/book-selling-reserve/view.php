@@ -11,16 +11,16 @@
 	</div>
 
 	<div class="row py-1">
-		<div class="col col-md-3">
+		<div class="col-12 col-md-3">
 			<input type="text" class="form-control form-control-sm" id="by_phone" name="by_phone" placeholder="поиск по телефону">
 		</div>
-		<div class="col col-md-3">
+		<div class="col-12 col-md-3">
 			<select class="form-select form-select-sm" id="by_branch" name="by_branch">
 				<option value="0">-- по филиалам</option>
 				<?php echo getOptionsK('', $branches)?>
 			</select>
 		</div>
-		<div class="col col-md-3">
+		<div class="col-12 col-md-3">
 			<select class="form-select form-select-sm" id="by_available" name="by_available">
 				<?php echo getOptionsK('', ['-- по количеству','Кол-во недостаточно','Достаточное кол-во '])?>
 			</select>
@@ -28,7 +28,7 @@
 	</div>
 </form>
 
-<table class="table table-striped table-hover border-secondary-subtle">
+<table class="table books-table table-striped table-hover border-secondary-subtle">
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
@@ -66,23 +66,23 @@
 			data-address="";
 			data-branch="<?php echo $r['branch_id']?>"
 			data-shortage="<?php echo $data_shortage?>">
-			<td class="align-middle"><?php echo $q?></td>
-			<td class="align-middle"><?php echo $r['branch_name']?></td>
-			<td class="align-middle"><?php echo $r['title']?><br><small><?php echo $r['author']?></small></td>
-			<td class="align-middle"><?php echo $r['phone']?></td>
-			<td class="align-middle"><small><?php echo $r['for_courier']?></small>
-			<td class="align-middle"><?php echo $r['qty']?>
+			<td class="align-middle" data-label="#"><?php echo $q?></td>
+			<td class="align-middle" data-label="Филиал"><?php echo $r['branch_name']?></td>
+			<td class="align-middle" data-label="Название"><?php echo $r['title']?><br><small><?php echo $r['author']?></small></td>
+			<td class="align-middle" data-label="Телефон"><?php echo $r['phone']?></td>
+			<td class="align-middle" data-label="Коммент."><small><?php echo $r['for_courier']?></small>
+			<td class="align-middle" data-label="Кол-во"><?php echo $r['qty']?>
 				<strong class="text-danger"><?php if ($shortage > 0) { echo " / -" . $shortage; } ?></strong>
 			</td>
-			<td class="align-middle text-center">
+			<td class="align-middle text-center" data-label="Сумма">
 				<strong class="text-success"><?php echo number_format($fullPrice, 2);?></strong>
 			</td>
-			<td class="align-middle text-center">
+			<td class="align-middle text-center" data-label="Платеж">
 				<strong class="<?php echo $amount_color?>"><?php echo $r['paid_sum'];?></strong>
 				<small class="surcharge">доплата: <?php echo $surcharge?></small>
 				<small style="white-space: nowrap;"><?php echo $paid_date?></small>
 			</td>
-			<td class="align-middle">
+			<td class="align-middle" data-label="">
 				<?php
 				if ($data_shortage == 2) {
 					?>

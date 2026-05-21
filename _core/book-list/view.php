@@ -3,17 +3,17 @@
 /** @var int $id */
 ?>
 <form action="/applications/" method="post" id="frm0" name="forMain">
-	<div class="row align-items-center">
-		<div class="col-md-8">
+	<div class="row align-items-center pb-1 pb-md-0">
+		<div class="col-6 col-md-8">
 			<h2>Книги</h2>
 		</div>
-		<div class="col-md-4 text-end ctrlBtn">
+		<div class="col-6 col-md-4 text-end ctrlBtn">
 			<button class="btn btn-sm btn-primary" type="button" data-mod="add" data-page="one"><i class="fa fa-plus" aria-hidden="true"></i> Добавить книгу</button>
 		</div>
 	</div>
 </form>
 
-<table class="table table-striped table-hover border-secondary-subtle">
+<table class="table books-table table-striped table-hover border-secondary-subtle">
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
@@ -31,12 +31,12 @@
 		$tr_class = ($id == $r['book_id']) ? "table-success": "";
 		?>
 		<tr class="rws <?php echo $tr_class?>">
-			<td class="align-middle"><?php echo $q?></td>
-			<td class="align-middle" title="<?php echo $r['book_id']?>"><?php echo $r['title']?></td>
-			<td class="align-middle"><?php echo $r['author']?></td>
-			<td class="align-middle"><?php echo $r['isbn']?></td>
-			<td class="align-middle"><?php echo $r['price']?></td>
-			<td class="align-middle">
+			<td class="align-middle" data-label="#"><?php echo $q?></td>
+			<td class="align-middle" data-label="Название" title="<?php echo $r['book_id']?>"><?php echo $r['title']?></td>
+			<td class="align-middle" data-label="Автор"><?php echo $r['author']?></td>
+			<td class="align-middle" data-label="ISBN"><?php echo $r['isbn']?></td>
+			<td class="align-middle" data-label="Цена"><?php echo $r['price']?></td>
+			<td class="align-middle" data-label="">
 				<div class="text-end ctrlBtn" data-pid="<?php echo $r['book_id']?>">
 					<button class="btn btn-success btn-sm" type="button" data-mod="edit" data-page="one"><i class="fas fa-pencil-alt"></i></button>
 					<button class="btn btn-danger btn-sm" type="button" data-mod="delete" data-page="delete"><i class="far fa-trash-alt"></i></button>

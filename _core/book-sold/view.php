@@ -51,12 +51,14 @@
 
 		</div>
 		<div class="collapse" id="collapseCBody">
-			<div class="card-body py-3">
+			<div class="card-body py-2">
 				<div class="close-abs">
 					<button type="button" class="btn-close close-card-body" data-bs-toggle="collapse" href="#collapseCBody" role="button" aria-expanded="false" aria-controls="collapseCBody"></button>
 				</div>
 				<div class="row">
-					<label class="col-sm-2 form-label form-label">Сортировать по: </label>
+					<div class="col-sm-2">
+						<label class="form-label form-label">Сортировать по: </label>
+					</div>
 					<div class="col-sm-3">
 						<div class="status_filter">
 							<label for="sort_by_sale" class="form-label form-label">по дате продажи: </label>
@@ -85,7 +87,7 @@
 
 				<div class="row mt-3">
 					<div class="col-sm-6 text-start">
-						<a href="/applications/" class="btn btn-sm btn-info">Очистить</a>
+						<a href="/book-sold/" class="btn btn-sm btn-info">Очистить</a>
 					</div>
 					<div class="col-sm-6 text-end">
 						<button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" href="#collapseCBody" role="button" aria-expanded="false" aria-controls="collapseCBody">
@@ -96,6 +98,24 @@
 			</div>
 		</div>
 	</div>
+
+	<nav class="pt-2" aria-label="Page navigation example">
+		<ul class="pagination pagination-sm justify-content-center">
+			<li class="page-item">
+				<a class="page-link" href="#" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			<li class="page-item active"><a class="page-link" href="#">1</a></li>
+			<li class="page-item"><a class="page-link" href="#">2</a></li>
+			<li class="page-item"><a class="page-link" href="#">3</a></li>
+			<li class="page-item">
+				<a class="page-link" href="#" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+	  </ul>
+	</nav>
 </form>
 
 <table class="table table-striped table-hover border-secondary-subtle">

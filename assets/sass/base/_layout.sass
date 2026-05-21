@@ -31,11 +31,14 @@ body
 
 .innex
 	.main-row
-		align-items: flex-end
+		align-items: flex-start
 		justify-content: center
-		min-height: 100vh
+		padding-top: 72px
+		min-height: calc(100vh - 80px)
 		+m($min_md)
 			align-items: center
+			padding-top: 0
+			min-height: 100vh
 		
 
 img, svg
@@ -142,9 +145,9 @@ small.form-text
 	position: relative
 	.marker
 		position: absolute
-		top: -50%
-		left: -40px
-		transform: translateY(-120%)
+		top: 0
+		left: -24px
+		transform: translateY(-250%)		
 		padding: 0 6px
 		border-radius: 6px
 		font-size: 0.75rem
@@ -154,7 +157,21 @@ small.form-text
 			background: #bfffc2
 		&.marker--region
 			background: #fff2bf
+		+m($min_md)
+			left: -10px
+			transform: translateY(-250%)
 
+
+.books-table
+	.where-go-marker
+		.marker
+			top: 0
+			left: 0
+			transform: translateY(-100%)
+			+m($min_md)
+				top: 0
+				left: -10px
+				transform: translateY(-250%)
 
 .loader-dots::after
 	content: ''

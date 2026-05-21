@@ -6,6 +6,7 @@ const pageInit = () => {
 	const toBranch = document.getElementById('branch_to');
 	const qtyTransfer = document.getElementById('qty_transfer');
 
+	if (!fromBranch) return;
 	fromBranch.addEventListener('change', (e) => {
 		const selectedOption = fromBranch.options[fromBranch.selectedIndex];
 		const max_qty = selectedOption.dataset.send;

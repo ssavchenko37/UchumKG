@@ -38,7 +38,7 @@ if ($stock['branch_id'] > 0) {
 		<h5 class="mt-2 mb-5"><?php echo $sTTL?></h5>
 		
 		<div class="row mb-3">
-			<label for="branch_id" class="col-sm-3 col-form-label text-end">Филиал:</label>
+			<label for="branch_id" class="col-sm-3 col-form-label text-md-end">Филиал:</label>
 			<div class="col-sm-9">
 				<select class="form-select" id="branch_id" name="branch_id">
 					<?php if ($mode == "add" && $branch_id < 1) { ?>
@@ -50,7 +50,7 @@ if ($stock['branch_id'] > 0) {
 		</div>
 
 		<div class="row mb-3">
-			<label for="book_id" class="col-sm-3 col-form-label text-end">Книга:</label>
+			<label for="book_id" class="col-sm-3 col-form-label text-md-end">Книга:</label>
 			<div class="col-sm-9">
 				<select class="form-select" id="book_id" name="book_id">
 					<?php if ($mode == "add") { ?>
@@ -62,7 +62,7 @@ if ($stock['branch_id'] > 0) {
 		</div>
 
 		<div class="row mb-3">
-			<label for="qty_total" class="col-sm-3 col-form-label text-end">Количество:</label>
+			<label for="qty_total" class="col-sm-3 col-form-label text-md-end">Количество:</label>
 			<div class="col-sm-7">
 				<input type="text" class="form-control" id="qty_total" name="qty_total" value="<?php if (isset($stock['qty_total'])) echo $stock['qty_total']?>">
 			</div>

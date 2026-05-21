@@ -7,8 +7,16 @@
 		display: flex
 		align-items: center
 		gap: 0.75rem
-		width: 20%
+		width: 30%
 		max-width: $max-nav-width
+		+m($min_md)
+			width: 20%
+
+	&__middle
+		display: flex
+		align-items: center
+		+m($min_md)
+			display: none
 
 	&__rside
 		display: flex
@@ -75,3 +83,10 @@
 		font-weight: 500
 		+m($min_md)
 			font-size: 1.125rem
+
+.view-switch
+	.view-btn
+		opacity: 0.5
+
+		&.is-active
+			opacity: 1

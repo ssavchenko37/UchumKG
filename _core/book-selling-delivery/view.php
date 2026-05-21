@@ -4,7 +4,7 @@
 /** @var array $branches */
 /** @var array $where_translate */
 ?>
-<form action="/applications/" method="post" id="frm0" name="forMain">
+<form action="/book-selling-delivery/" method="post" id="frm0" name="forMain">
 	<div class="row align-items-center">
 		<div class="col-md-8">
 			<h2>Продажа с доставкой</h2>
@@ -12,21 +12,21 @@
 	</div>
 
 	<div class="row py-1">
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<input type="text" class="form-control form-control-sm" id="by_phone" name="by_phone" placeholder="поиск по телефону">
 		</div>
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<select class="form-select form-select-sm" id="by_delivery" name="by_delivery">
 				<?php echo getOptionsK('', ['0'=>'-- по доставке','capital'=>'Доставка по городу','region'=>'Доставка в регион'])?>
 			</select>
 		</div>
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<select class="form-select form-select-sm" id="by_branch" name="by_branch">
 				<option value="0">-- по филиалам</option>
 				<?php echo getOptionsK('', $branches)?>
 			</select>
 		</div>
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<select class="form-select form-select-sm" id="by_available" name="by_available">
 				<?php echo getOptionsK('', ['-- по количеству','Кол-во недостаточно','Достаточное кол-во '])?>
 			</select>
@@ -34,7 +34,7 @@
 	</div>
 </form>
 
-<table class="table table-striped table-hover border-secondary-subtle">
+<table class="table books-table table-striped table-hover border-secondary-subtle">
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
@@ -73,28 +73,28 @@
 			data-delivery="<?php echo $r['where_go']?>"
 			data-branch="<?php echo $r['branch_id']?>" 
 			data-shortage="<?php echo $data_shortage?>">
-			<td class="align-middle">
+			<td class="align-middle" data-label="#">
 				<div class="where-go-marker">
 					<div class="marker marker--<?php echo $r['where_go']?>"><?php echo $where_translate[$r['where_go']]?></div>
 				</div>
 				<?php echo $q?>
 			</td>
-			<td class="align-middle"><?php echo $r['branch_name']?></td>
-			<td class="align-middle"><?php echo $r['title']?><br><small><?php echo $r['author']?></small></td>
-			<td class="align-middle"><?php echo $r['phone']?></td>
-			<td class="align-middle"><?php echo $delivery?><br><small><?php echo $r['for_courier']?></small>
-			<td class="align-middle"><?php echo $r['qty']?>
+			<td class="align-middle" data-label="Филиал"><?php echo $r['branch_name']?></td>
+			<td class="align-middle" data-label="Название"><?php echo $r['title']?><br><small><?php echo $r['author']?></small></td>
+			<td class="align-middle" data-label="Телефон"><?php echo $r['phone']?></td>
+			<td class="align-middle" data-label="Доставка"><?php echo $delivery?><br><small><?php echo $r['for_courier']?></small>
+			<td class="align-middle" data-label="Кол-во"><?php echo $r['qty']?>
 				<strong class="text-danger"><?php if ($shortage > 0) { echo " / -" . $shortage; } ?></strong>
 			</td>
-			<td class="align-middle text-center">
+			<td class="align-middle text-center" data-label="Сумма">
 				<strong class="text-success"><?php echo number_format($cost, 2);?></strong>
 			</td>
-			<td class="align-middle text-center">
+			<td class="align-middle text-center" data-label="Платеж">
 				<strong class="<?php echo $amount_color?>"><?php echo $r['amount'];?></strong>
 				<small class="surcharge">доплата: <?php echo $surcharge?></small>
 				<br><small><?php echo $r['comment']?></small>
 			</td>
-			<td class="align-middle">
+			<td class="align-middle" data-label="">
 				<?php
 				if ($data_shortage == 2) {
 					?>

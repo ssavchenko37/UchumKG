@@ -5,17 +5,17 @@
 /** @var int $id */
 ?>
 <form action="/applications/" method="post" id="frm0" name="forMain">
-	<div class="row align-items-center">
-		<div class="col-md-8">
+	<div class="row align-items-center pb-1 pb-md-0">
+		<div class="col-6 col-md-8">
 			<h2>Брак</h2>
 		</div>
-		<div class="col-md-4 text-end ctrlBtn">
+		<div class="col-6 col-md-4 text-end ctrlBtn">
 			<button class="btn btn-sm btn-primary" type="button" data-mod="add" data-page="one"><i class="fa fa-plus" aria-hidden="true"></i> Добавить</button>
 		</div>
 	</div>
 </form>
 
-<table class="table table-striped table-hover border-secondary-subtle">
+<table class="table books-table table-striped table-hover border-secondary-subtle">
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
@@ -39,15 +39,15 @@
 		$mode = ($r['status'] === "defective") ? "edit": "review";
 		?>
 		<tr class="rws <?php echo $tr_class.$not_enough?>">
-			<td class="align-middle"><?php echo $q?></td>
-			<td class="align-middle"><?php echo $employee[$r['tutor_id']]?></td>
-			<td class="align-middle" title="<?php echo $r['branch_id']?>"><?php echo $r['branch_name']?></td>
-			<td class="align-middle" title="<?php echo $r['title']?>"><?php echo mb_substr($r['title'], 0, 20, 'UTF-8');?>...</td>
-			<td class="align-middle"><?php echo $r['qty']?></td>
-			<td class="align-middle"><small><?php echo nl2br($r['comment'])?></small></td>
-			<td class="align-middle"><?php echo $defect_statuses[$r['status']]?></td>
-			<td class="align-middle"><small><?php echo $r['createdAt']?></small></td>
-			<td class="align-middle"><small><?php echo $r['updatedAt']?></small></td>
+			<td class="align-middle" data-label="#"><?php echo $q?></td>
+			<td class="align-middle" data-label="Сотрудник"><?php echo $employee[$r['tutor_id']]?></td>
+			<td class="align-middle" data-label="Филиал" title="<?php echo $r['branch_id']?>"><?php echo $r['branch_name']?></td>
+			<td class="align-middle" data-label="Название" title="<?php echo $r['title']?>"><?php echo mb_substr($r['title'], 0, 20, 'UTF-8');?>...</td>
+			<td class="align-middle" data-label="Кол-во"><?php echo $r['qty']?></td>
+			<td class="align-middle" data-label="Коммент."><small><?php echo nl2br($r['comment'])?></small></td>
+			<td class="align-middle" data-label="Статус"><?php echo $defect_statuses[$r['status']]?></td>
+			<td class="align-middle" data-label="Создано"><small><?php echo $r['createdAt']?></small></td>
+			<td class="align-middle" data-label="Изменено"><small><?php echo $r['updatedAt']?></small></td>
 			
 			<td class="align-middle">
 				<div class="text-end ctrlBtn" data-pid="<?php echo $r['defect_id']?>">

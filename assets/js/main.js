@@ -70,8 +70,8 @@ const navbarToggleCollapse = () => {
 
 	const body = document.body;
 	const nav = document.getElementsByClassName('navspace')[0];
-	// let bodyClass = "nav-collapsed";
-	let bodyClass = "";
+	let bodyClass = (window.innerWidth > 1023)? "": "nav-collapsed";
+	//let bodyClass = "";
 	let collapced = localStorage.getItem('navCollapsed');
 
 	if (window.innerWidth > 1023) {
@@ -172,6 +172,59 @@ const tlasideClose = () => {
 			doClose();
 		}
 	});
+	if (window.innerWidth <= 1024) {
+		const panel = tlaside.getElementsByClassName('tlaside__block')[0];
+		let startX = 0
+		let currentX = 0
+		let isDragging = false
+
+		panel.addEventListener('touchstart', e => {
+
+			startX = e.touches[0].clientX
+			isDragging = true
+
+		})
+
+		panel.addEventListener('touchmove', e => {
+
+			if (!isDragging)
+				return
+
+			currentX = e.touches[0].clientX
+
+			const diff = currentX - startX
+
+			if (diff > 0) {
+
+				panel.style.transform = `translateX(${diff}px)`
+
+			}
+
+		})
+
+		panel.addEventListener('touchend', () => {
+
+			if (!isDragging)
+				return
+
+			isDragging = false
+
+			const diff = currentX - startX
+
+			// если свайпнули достаточно
+			if (diff > 120) {
+				tlaside.classList.remove('show-block1');
+				setTimeout(() => {
+					tlaside.classList.remove('show');
+					document.body.classList.remove('no-scroll');
+				}, 500);
+				panel.style.transform = ''
+			} else {
+				panel.style.transform = ''
+			}
+
+		})
+	}
 }
 const getViewer = (formData) => {
 	let pathname = window.location.pathname;
@@ -577,7 +630,6 @@ const verifyPayment = (dateStr) => {
 			verify_elm.style.display = "none";
 			has_elm.style.display = "block";
 			let row = '';
-			console.log(data);
 			data.forEach((item)=> {
 				row += `
 				<div class="exist-row pb-3">
@@ -602,7 +654,12 @@ const verifyPayment = (dateStr) => {
 			entry.innerHTML = row;
 		} else {
 			modalEl.addEventListener('shown.bs.modal', () => {
-				setTimeout(() => {modal.hide();}, 400);
+				setTimeout(() => {
+					if (modalEl.contains(document.activeElement)) {
+						document.activeElement.blur();
+					}
+					modal.hide();
+				}, 400);
 			}, { once: true });
 		}
 	});
@@ -627,7 +684,36 @@ const paymentDateHandler = () => {
 		onClose: function(selectedDates, dateStr, instance) {
 			if (dateStr) {
 				verifyPayment(dateStr);
+				if (typeof amountCheck === 'function') {
+					amountCheck();
+				}
 			}
 		}
 	});
 };
+
+const mobileTableMode = () => {
+	const buttons = document.querySelectorAll('.view-btn')
+	const btable = document.getElementsByClassName('books-table')[0]
+
+	if (!btable) return;
+
+	buttons.forEach(button => {
+		button.addEventListener('click', () => {
+			const view = button.dataset.view
+			// buttons
+			buttons.forEach(btn => {
+				btn.classList.remove('is-active')
+			})
+			button.classList.add('is-active')
+			// content
+			console.log(view);
+			if (view === "table") {
+				btable.classList.remove('books-table')
+			} else {
+				btable.classList.add('books-table')
+			}
+		})
+	})
+}
+docReady(mobileTableMode);

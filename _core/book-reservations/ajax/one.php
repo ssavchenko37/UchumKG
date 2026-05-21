@@ -62,14 +62,14 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 			<div class="col">Основные данные брони</div>
 		</div>
 		<div class="row mb-3">
-			<label for="phone" class="col-sm-4 col-form-label text-end">Телефон:</label>
+			<label for="phone" class="col-sm-4 col-form-label text-md-end">Телефон:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control" id="phone" name="phone" value="<?php if (isset($reservation['phone'])) echo $reservation['phone']?>">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label for="book_id" class="col-sm-4 col-form-label text-end">Книга:</label>
+			<label for="book_id" class="col-sm-4 col-form-label text-md-end">Книга:</label>
 			<div class="col-sm-8">
 				<select class="form-select" id="book_id" name="book_id">
 					<?php if (count($books) > 1) { ?>
@@ -81,14 +81,14 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 		</div>
 
 		<div class="row mb-3">
-			<label for="qty" class="col-sm-4 col-form-label text-end">Количество:</label>
+			<label for="qty" class="col-sm-4 col-form-label text-md-end">Количество:</label>
 			<div class="col-sm-8">
 				<input type="number" class="form-control" id="qty" name="qty" value="<?php if (isset($reservation['qty'])) echo $reservation['qty']?>">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label for="branch_id" class="col-sm-4 col-form-label text-end">Филиал:</label>
+			<label for="branch_id" class="col-sm-4 col-form-label text-md-end">Филиал:</label>
 			<div class="col-sm-8">
 				<select class="form-select" id="branch_id" name="branch_id">
 					<?php if ($mode == "edit") { ?>
@@ -103,7 +103,7 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 			<div class="col">Заполняем если есть подтвержденная оплата</div>
 		</div>
 		<div class="row mb-3">
-			<label for="price" class="col-sm-4 col-form-label text-end">Цена экземпляра:</label>
+			<label for="price" class="col-sm-4 col-form-label text-md-end">Цена экземпляра:</label>
 			<div class="col-sm-8">
 				<input type="number" readonly class="form-control" id="price" name="price" value="<?php if (isset($reservation['price'])) echo $reservation['price']?>">
 			</div>
@@ -117,12 +117,12 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 				$part_total = $part_total + $part['amount'];
 				?>
 				<div class="row mb-3 border-bottom border-top">
-					<label class="col-sm-4 col-form-label text-end">Оплачено:</label>
-					<div class="col-sm-2">
+					<label class="col-5 col-sm-4 col-form-label text-md-end">Оплачено:</label>
+					<div class="col-7 col-sm-2">
 						<input type="text" readonly class="form-control-plaintext" value="<?php echo $part['amount']?>">
 					</div>
-					<label for="amount" class="col-sm-3 col-form-label text-end">Дата платежа:</label>
-					<div class="col-sm-3">
+					<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end">Дата платежа:</label>
+					<div class="col-7 col-sm-3">
 						<input type="text" readonly class="form-control-plaintext" value="<?php echo $part['part_comment']?>">
 					</div>
 				</div>
@@ -135,8 +135,8 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 
 		<input type="hidden" id="part_total" value="<?php echo $part_total?>">
 		<div class="row mb-3">
-			<label for="amount" class="col-sm-4 col-form-label text-end">Подтвержденная сумма:</label>
-			<div class="col-sm-8">
+			<label for="amount" class="col-12 col-sm-4 col-form-label text-md-end">Подтвержденная сумма:</label>
+			<div class="col-12 col-sm-8">
 				<input type="text" class="form-control" id="amount" name="amount" value="<?php echo $reservation['amount']?>">
 				<?php if ($mode == "add") { ?>
 					<small id="needed_amount"></small>
@@ -147,7 +147,7 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 		</div>
 
 		<div class="row mb-3">
-			<label for="comment" class="col-sm-4 col-form-label text-end">Дата и время платежа:</label>
+			<label for="comment" class="col-sm-4 col-form-label text-md-end">Дата и время платежа:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control form-control-sm" id="comment" name="comment" value="<?php echo $reservation['comment']?>">
 			</div>
@@ -174,7 +174,7 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 			</div>
 		</div>
 		<div class="row mb-3">
-			<label for="delivery_to" class="col-sm-4 col-form-label text-end">Адрес доставки:</label>
+			<label for="delivery_to" class="col-sm-4 col-form-label text-md-end">Адрес доставки:</label>
 			<div class="col-sm-8">
 				<input type="text" class="form-control" id="delivery_to" name="delivery_to" value="<?php if (isset($reservation['delivery_to'])) echo $reservation['delivery_to']?>">
 				<small class="text-secondary" id="max_qty"></small>
@@ -182,7 +182,7 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 		</div>
 
 		<div class="row mb-2">
-			<label for="for_courier" class="col-sm-4 col-form-label text-end">Комментарий:</label>
+			<label for="for_courier" class="col-sm-4 col-form-label text-md-end">Комментарий:</label>
 			<div class="col-sm-8">
 				<textarea class="form-control" id="for_courier" name="for_courier"><?php echo $reservation['for_courier']?></textarea>
 			</div>

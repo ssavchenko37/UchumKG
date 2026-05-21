@@ -81,3 +81,13 @@ const pageInit = () => {
 
 	setTimeout(paymentDateHandler, 100);
 }
+
+const amountCheck = () => {
+	const btn = document.getElementById('create_reserve');
+	const amount = document.getElementById('amount');
+	const comment = document.getElementById('comment');
+	btn.disabled = true;
+	if (amount.value && comment.value) {
+		btn.disabled = false;
+	}
+}

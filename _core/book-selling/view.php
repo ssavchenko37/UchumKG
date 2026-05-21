@@ -13,7 +13,7 @@
 	<div class="col-sm-12 offset-md-1 col-md-10 col-lg-9 col-xl-8">
 
 		<div class="row mb-3">
-			<label for="branch_id" class="col-sm-3 col-form-label text-end">Филиал:</label>
+			<label for="branch_id" class="col-sm-3 col-form-label text-md-end">Филиал:</label>
 			<div class="col-sm-9">
 				<select class="form-select" id="branch_id" name="branch_id">
 					<option value=""> -- </option>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="row mb-3">
-			<label for="book_id" class="col-sm-3 col-form-label text-end">Книга:</label>
+			<label for="book_id" class="col-sm-3 col-form-label text-md-end">Книга:</label>
 			<div class="col-sm-9">
 				<select class="form-select" id="book_id" name="book_id">
 				</select>
@@ -31,14 +31,14 @@
 		</div>
 
 		<div class="row mb-3">
-			<label for="price" class="col-sm-3 col-form-label text-end">Цена экземпляра:</label>
+			<label for="price" class="col-sm-3 col-form-label text-md-end">Цена экземпляра:</label>
 			<div class="col-sm-9">
 				<input type="number" class="form-control" id="price" name="price" value="">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label for="qty" class="col-sm-3 col-form-label text-end">Количество:</label>
+			<label for="qty" class="col-sm-3 col-form-label text-md-end">Количество:</label>
 			<div class="col-sm-9">
 				<input type="number" class="form-control" id="qty" name="qty" value="">
 				<small class="text-secondary" id="max_qty"></small>
@@ -46,21 +46,21 @@
 		</div>
 
 		<div class="row mb-3">
-			<label for="amount" class="col-sm-3 col-form-label text-end">Оплачено:</label>
+			<label for="amount" class="col-sm-3 col-form-label text-md-end">Оплачено:</label>
 			<div class="col-sm-9">
 				<input type="text" class="form-control" id="amount" name="amount" value="">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label for="phone" class="col-sm-3 col-form-label text-end">Телефон:</label>
+			<label for="phone" class="col-sm-3 col-form-label text-md-end">Телефон:</label>
 			<div class="col-sm-9">
 				<input type="text" class="form-control" id="phone" name="phone" value="">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label for="comment" class="col-sm-3 col-form-label text-end">Комментарий:</label>
+			<label for="comment" class="col-sm-3 col-form-label text-md-end">Комментарий:</label>
 			<div class="col-sm-9">
 				<textarea class="form-control" id="comment" name="comment" placeholder=""></textarea>
 			</div>

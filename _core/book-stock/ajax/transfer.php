@@ -29,7 +29,7 @@ foreach ($tmp_branches as $k=>$r) {
 		<h5 class="mt-2 mb-5">Трансфер книги</h5>
 
 		<div class="row mb-3">
-			<label for="branch_from" class="col-sm-3 col-form-label text-end">Филиал откуда:</label>
+			<label for="branch_from" class="col-sm-3 col-form-label text-md-end">Филиал откуда:</label>
 			<div class="col-sm-9">
 				<select class="form-select" id="branch_from" name="branch_from">
 					<option value=""> -- </option>
@@ -41,7 +41,7 @@ foreach ($tmp_branches as $k=>$r) {
 		</div>
 
 		<div class="row mb-3">
-			<label for="branch_to" class="col-sm-3 col-form-label text-end">Филиал куда:</label>
+			<label for="branch_to" class="col-sm-3 col-form-label text-md-end">Филиал куда:</label>
 			<div class="col-sm-9">
 				<select class="form-select" id="branch_to" name="branch_to">
 				</select>
@@ -49,7 +49,7 @@ foreach ($tmp_branches as $k=>$r) {
 		</div>
 
 		<div class="row mb-3">
-			<label for="qty_transfer" class="col-sm-3 col-form-label text-end">Количество:</label>
+			<label for="qty_transfer" class="col-sm-3 col-form-label text-md-end">Количество:</label>
 			<div class="col-sm-7">
 				<input type="number" class="form-control" id="qty_transfer" name="qty_transfer" value="">
 				<small></small>

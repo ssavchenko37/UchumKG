@@ -11,11 +11,11 @@
 <form action="/book-stock-list/" method="post" id="frm0" name="forMain">
 	<input type="hidden" id="view_branch_id" name="view_branch_id" value="<?php echo $branch_id?>">
 	<input type="hidden" id="view_book_id" name="view_book_id" value="<?php echo $book_id?>">
-	<div class="row align-items-center">
-		<div class="col-md-8">
+	<div class="row align-items-center pb-1 pb-md-0">
+		<div class="col-6 col-md-8">
 			<h2>Остатки книг</h2>
 		</div>
-		<div class="col-md-4 text-end ctrlBtn">
+		<div class="col-6 col-md-4 text-end ctrlBtn">
 			<?php if ($is_back) { ?>
 			<a href="/book-stock/" class="btn btn-sm btn-secondary"><i class="fa-solid fa-angle-left"></i> Назад к списку</a>
 			<?php } ?>
@@ -25,12 +25,11 @@
 			<?php if ($is_total) { ?>
 			<button class="btn btn-sm btn-primary" type="button" data-mod="" data-page="transfer"><i class="fa fa-plus" aria-hidden="true"></i> Трансфер книги</button>
 			<?php } ?>
-
 		</div>
 	</div>
 </form>
 
-<table class="table table-striped table-hover border-secondary-subtle">
+<table class="table books-table table-striped table-hover border-secondary-subtle">
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
@@ -65,8 +64,8 @@
 		$defect = is_array($defectives) ? array_sum($defectives): 0;
 		?>
 		<tr class="rws <?php echo $tr_class?>">
-			<td class="align-middle" title="<?php echo $r['stock_id']?>"><?php echo $q?></td>
-			<td class="align-middle" title="<?php echo $r['branch_id']?>">
+			<td class="align-middle" data-label="#" title="<?php echo $r['stock_id']?>"><?php echo $q?></td>
+			<td class="align-middle" data-label="Филиал" title="<?php echo $r['branch_id']?>">
 				<?php if (empty($branch_id)) { ?>
 				<a href="/book-stock/?<?php echo $branch_request?>">
 					<?php echo $r['branch_name']?>
@@ -75,7 +74,7 @@
 				<?php echo $r['branch_name']?>
 				<?php } ?>
 			</td>	
-			<td class="align-middle" title="<?php echo $r['book_id']?>">
+			<td class="align-middle" data-label="Название" title="<?php echo $r['book_id']?>">
 				<?php if (empty($book_id)) { ?>
 				<a href="/book-stock/?<?php echo $book_request?>">
 					<?php echo $r['title']?><br><small><?php echo $r['author']?></small>
@@ -84,13 +83,13 @@
 				<?php echo $r['title']?><br><small><?php echo $r['author']?></small>
 				<?php } ?>
 			</td>
-			<td class="align-middle text-center"><?php echo $r['qty_total']?></td>
-			<td class="align-middle text-center"><?php echo $r['qty_paid']?></td>
-			<td class="align-middle text-center"><?php echo $r['qty_sold']?></td>
-			<td class="align-middle text-center"><?php echo $defect?></td>
-			<td class="align-middle text-center <?php echo $available?>"><strong><?php echo $r['available']?></strong></td>
+			<td class="align-middle text-center" data-label="Всего"><?php echo $r['qty_total']?></td>
+			<td class="align-middle text-center" data-label="Оплачено"><?php echo $r['qty_paid']?></td>
+			<td class="align-middle text-center" data-label="Продано"><?php echo $r['qty_sold']?></td>
+			<td class="align-middle text-center" data-label="Брак"><?php echo $defect?></td>
+			<td class="align-middle text-center <?php echo $available?>" data-label="Доступно"><strong><?php echo $r['available']?></strong></td>
 			<td class="align-middle">
-				<div class="text-end ctrlBtn" data-pid="<?php echo $r['stock_id']?>">
+				<div class="text-end ctrlBtn" data-pid="<?php echo $r['stock_id']?>" data-label="">
 					<button class="btn btn-success btn-sm" type="button" data-mod="edit" data-page="one"><i class="fas fa-pencil-alt"></i></button>
 					<button class="btn btn-danger btn-sm" type="button" data-mod="delete" data-page="delete"><i class="far fa-trash-alt"></i></button>
 				</div>

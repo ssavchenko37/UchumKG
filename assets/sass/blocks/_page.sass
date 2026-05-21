@@ -53,9 +53,13 @@
 		overflow: hidden
 
 		&--main
-			gap: 2rem
+			gap: 1rem
 			#{$pg}__title
+				gap: 1rem
+			+m($min_md)
 				gap: 2rem
+				#{$pg}__title
+					gap: 2rem
 
 		&--offer, &--sign
 			height: 92dvh
@@ -88,8 +92,11 @@
 			flex: 0 0 auto
 
 	&__author
-		width: 9rem
-		height: 9rem
+		width: 6rem
+		height: 6rem
+		+m($min_md)
+			width: 9rem
+			height: 9rem
 		
 		img
 			border: 2px solid #FFFFFF
@@ -105,22 +112,26 @@
 	&__links
 		display: flex
 		flex-direction: column
+		gap: 1rem
 
 		+m($min_md)
 			flex-direction: row
 			justify-content: space-between
-			gap: 1rem
 
 	&__link
-		flex: 1 0 0
 		display: flex
 		flex-direction: column
-		padding: 1rem
+		padding: 0.5rem 1rem
 		border-radius: 1rem
 		background: linear-gradient(135deg, rgba(223, 234, 248, 1),rgba(223, 234, 248, 0.2))
 		color: $blue
 		text-decoration: none
 		transition: all  0.3s ease
+
+		+m($min_md)
+			flex: 1 0 0
+			padding: 1rem
+
 		&:hover
 			color: $blueDark
 			background: linear-gradient(135deg, rgba(255, 255, 255, 0.8),rgba(255, 255, 255, 0.4))

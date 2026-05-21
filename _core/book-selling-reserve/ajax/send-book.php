@@ -35,30 +35,30 @@ if ($payment['amount'] < $fullPrice) {
 		<h5 class="mt-2 mb-4">Закрыть продажу</h5>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Филиал:</label>
-			<div class="col-sm-9">
+			<label class="col-4 col-form-label text-md-end">Филиал:</label>
+			<div class="col-8">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['branch_name']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Книга:</label>
-			<div class="col-sm-9">
+			<label class="col-4 col-form-label text-md-end">Книга:</label>
+			<div class="col-8">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['title']?> / <?php echo $payment['author']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Цена экземпляра:</label>
-			<div class="col">
+			<label class="col-4 col-md-4 col-form-label text-md-end">Цена экземпляра:</label>
+			<div class="col-8 col-md-2">
 				<input type="text" readonly class="form-control-plaintext" value="<?php  echo $payment['price']?>">
 			</div>
-			<label class="col col-form-label text-end">Кол-во:</label>
-			<div class="col">
+			<label class="col-4 col-md-2 col-form-label text-md-end">Кол-во:</label>
+			<div class="col-2 col-md-1">
 				<input type="text" readonly class="form-control-plaintext" value="<?php  echo $payment['qty']?>">
 			</div>
-			<label class="col col-form-label text-end">Стоимость:</label>
-			<div class="col">
+			<label class="col-3 col-md-2 col-form-label text-md-end">Стоимость:</label>
+			<div class="col-3 col-md-1">
 				<input type="text" readonly class="form-control-plaintext" name="full_price" id="fullPrice" value="<?php echo $fullPrice?>">
 			</div>
 		</div>
@@ -70,12 +70,12 @@ if ($payment['amount'] < $fullPrice) {
 				$part_total = $part_total + $part['amount'];
 				?>
 				<div class="row mb-3 border-bottom border-top">
-					<label class="col-sm-3 col-form-label text-end text-success">Оплачено:</label>
-					<div class="col-sm-2">
+					<label class="col-5 col-sm-3 col-form-label text-md-end text-success">Оплачено:</label>
+					<div class="col-7 col-sm-2">
 						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['amount']?>">
 					</div>
-					<label for="amount" class="col-sm-3 col-form-label text-end text-success">Дата платежа:</label>
-					<div class="col-sm-3">
+					<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end text-success">Дата платежа:</label>
+					<div class="col-7 col-sm-3">
 						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['part_comment']?>">
 					</div>
 				</div>
@@ -90,8 +90,8 @@ if ($payment['amount'] < $fullPrice) {
 
 		<?php if ($payment['payment_type'] === "single") { ?>
 		<div class="row mb-3">
-			<label for="amount" class="col-sm-3 col-form-label text-end text-success">Оплачено:</label>
-			<div class="col-sm-8">
+			<label for="amount" class="col-4 col-sm-3 col-form-label text-md-end text-success">Оплачено:</label>
+			<div class="col-8 col-sm-8">
 				<input type="text" readonly class="form-control text-success" id="amount" name="amount" value="<?php echo $payment['amount']?>">
 			</div>
 		</div>
@@ -99,8 +99,8 @@ if ($payment['amount'] < $fullPrice) {
 
 		<?php if ($payment['payment_type'] === "partial") { ?>
 		<div class="row mb-3">
-			<label for="amount" class="col-sm-3 col-form-label text-end text-danger">Доплата:</label>
-			<div class="col-sm-8">
+			<label for="amount" class="col-12 col-sm-3 col-form-label text-md-end text-danger">Доплата:</label>
+			<div class="col-12 col-sm-8">
 				<input type="text" class="form-control" id="amount" name="amount" value="<?php echo $payment['amount']?>">
 				<small class="text-danger">Необходимо: <small id="needed_amount"><?php echo $remain_amount?></small></small>
 			</div>
@@ -108,21 +108,21 @@ if ($payment['amount'] < $fullPrice) {
 		<?php } ?>
 
 		<div class="row mb-3">
-			<label for="comment" class="col-sm-3 col-form-label text-end">Дата платежа:</label>
-			<div class="col-sm-8">
+			<label for="comment" class="col-12 col-sm-3 col-form-label text-md-end">Дата платежа:</label>
+			<div class="col-12 col-sm-8">
 				<input type="text" class="form-control form-control-sm" id="comment" name="comment" value="<?php echo $payment['comment']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Телефон:</label>
-			<div class="col-sm-9">
+			<label class="col-4 col-sm-3 col-form-label text-md-end">Телефон:</label>
+			<div class="col-8 col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['phone']?>">
 			</div>
 		</div>
 		<div class="row mb-2">
-			<label for="for_courier" class="col-sm-3 col-form-label text-end">Комментарий:</label>
-			<div class="col-sm-9">
+			<label for="for_courier" class="col-4 col-sm-3 col-form-label text-md-end">Комментарий:</label>
+			<div class="col-8 col-sm-9">
 				<textarea readonly class="form-control-plaintext"><?php echo $payment['for_courier']?></textarea>
 			</div>
 		</div>

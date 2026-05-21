@@ -62,6 +62,7 @@ if (!empty($sort_val['sort_by_paid'])) {
 
 
 $orders = $DB->select($sql.$sort , (empty($tutor_id)) ? DBSIMPLE_SKIP : $tutor_id);
+p(count($orders));
 
 
 $branches = $DB->selectCol('SELECT branch_id AS ARRAY_KEY, name FROM ?_bk_branches');

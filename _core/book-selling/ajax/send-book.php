@@ -23,42 +23,42 @@ $payment = $DB->selectRow('SELECT r.reservation_id, r.qty, r.phone, r.created_at
 		<h5 class="mt-2 mb-4">Закрыть продажу</h5>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Филиал:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Филиал:</label>
 			<div class="col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['branch_name']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Книга:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Книга:</label>
 			<div class="col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['title']?> / <?php echo $payment['author']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Цена экземпляра:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Цена экземпляра:</label>
 			<div class="col">
 				<input type="text" readonly class="form-control-plaintext" value="<?php  echo $payment['price']?>">
 			</div>
-			<label class="col col-form-label text-end">Кол-во:</label>
+			<label class="col col-form-label text-md-end">Кол-во:</label>
 			<div class="col">
 				<input type="text" readonly class="form-control-plaintext" value="<?php  echo $payment['qty']?>">
 			</div>
-			<label class="col col-form-label text-end">Оплачено:</label>
+			<label class="col col-form-label text-md-end">Оплачено:</label>
 			<div class="col">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['amount']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Телефон:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Телефон:</label>
 			<div class="col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $payment['phone']?>">
 			</div>
 		</div>
 		<div class="row mb-2">
-			<label for="comment" class="col-sm-3 col-form-label text-end">Комментарий:</label>
+			<label for="comment" class="col-sm-3 col-form-label text-md-end">Комментарий:</label>
 			<div class="col-sm-9">
 				<textarea readonly class="form-control-plaintext"><?php echo $payment['comment']?></textarea>
 			</div>
@@ -81,7 +81,7 @@ $payment = $DB->selectRow('SELECT r.reservation_id, r.qty, r.phone, r.created_at
 			</div>
 		</div>
 		<div class="row mb-2">
-			<label for="delivery_to" class="col-sm-3 col-form-label text-end">Адрес доставки:</label>
+			<label for="delivery_to" class="col-sm-3 col-form-label text-md-end">Адрес доставки:</label>
 			<div class="col-sm-7">
 				<input type="text" class="form-control" id="delivery_to" name="delivery_to" value="<?php echo $payment['delivery_to']?>">
 			</div>

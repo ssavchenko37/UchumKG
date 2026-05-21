@@ -18,21 +18,21 @@
 	</div>
 
 	<div class="row py-1">
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<input type="text" class="form-control form-control-sm" id="by_phone" name="by_phone" placeholder="поиск по телефону">
 		</div>
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<select class="form-select form-select-sm" id="by_delivery" name="by_delivery">
 				<?php echo getOptionsK('', ['0'=>'-- по доставке','hand'=>'Самовывоз','capital'=>'Доставка по городу','region'=>'Доставка в регион'])?>
 			</select>
 		</div>
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<select class="form-select form-select-sm" id="by_branch" name="by_branch">
 				<option value="0">-- по филиалам</option>
 				<?php echo getOptionsK('', $branches)?>
 			</select>
 		</div>
-		<div class="col col-md-3">
+		<div class="col-6 col-md-3">
 			<select class="form-select form-select-sm" id="by_available" name="by_available">
 				<?php echo getOptionsK('', ['-- по количеству','Кол-во недостаточно','Достаточное кол-во'])?>
 			</select>
@@ -40,7 +40,7 @@
 	</div>
 </form>
 
-<table class="table table-striped table-hover border-secondary-subtle">
+<table class="table books-table table-striped table-hover border-secondary-subtle">
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
@@ -81,26 +81,27 @@
 			data-delivery="<?php echo $r['where_go']?>"
 			data-branch="<?php echo $r['branch_id']?>"
 			data-shortage="<?php echo $data_shortage?>"> 
-			<td class="align-middle">
+			<td class="align-middle" data-label="#">
+				<?php echo $q?>
 				<div class="where-go-marker">
 					<div class="marker marker--<?php echo $r['where_go']?>"><?php echo $where_translate[$r['where_go']]?></div>
 				</div>
-				<?php echo $q?>
+				
 			</td>
-			<td class="align-middle" title="<?php echo $r['reservation_id']?>">
+			<td class="align-middle" data-label="Филиал" title="<?php echo $r['reservation_id']?>">
 				<?php echo $r['branch_name']?><br><small><?php echo $r['created']?></small>
 			</td>
-			<td class="align-middle" title="<?php echo $r['title'] . " " . $r['author']?>"><?php echo $r['title']?></td>
-			<td class="align-middle"><?php echo $r['phone']?></td>
-			<td class="align-middle"><?php echo $delivery?><br><small><?php echo $r['for_courier']?></small>
+			<td class="align-middle" data-label="Название" title="<?php echo $r['title'] . " " . $r['author']?>"><?php echo $r['title']?></td>
+			<td class="align-middle" data-label="Телефон"><?php echo $r['phone']?></td>
+			<td class="align-middle" data-label="Доставка"><?php echo $delivery?><br><small><?php echo $r['for_courier']?></small>
 			</td>
-			<td class="align-middle"><?php echo $r['qty']?>
+			<td class="align-middle" data-label="Кол-во"><?php echo $r['qty']?>
 				<strong class="text-danger"><?php if ($shortage > 0) { echo " / -" . $shortage; } ?></strong>
 			</td>
-			<td class="align-middle text-center">
+			<td class="align-middle text-center" data-label="Сумма">
 				<strong class="text-success"><?php echo number_format($cost, 2);?></strong>
 			</td>
-			<td class="align-middle text-center">
+			<td class="align-middle text-center" data-label="Платеж">
 				<?php if (empty($r['payment_id']) && $shortage <= 0) { ?>
 				<div class="ctrlBtn" data-pid="<?php echo $r['reservation_id']?>">
 					<button class="btn btn-info btn-sm" type="button" data-mod="payment" data-page="payment"><i class="fa-regular fa-credit-card"></i></button>
@@ -112,7 +113,7 @@
 				<?php } ?>
 				<br><small><?php echo $r['comment']?></small>
 			</td>
-			<td class="align-middle" nowrap>
+			<td class="align-middle" data-label="" nowrap>
 				<div class="ctrlBtn" data-pid="<?php echo $r['reservation_id']?>">
 					<button class="btn btn-success btn-sm" type="button" data-mod="edit" data-page="one"><i class="fas fa-pencil-alt"></i></button>
 					<button class="btn btn-danger btn-sm" type="button" data-mod="delete" data-page="delete"><i class="far fa-trash-alt"></i></button>

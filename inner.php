@@ -46,6 +46,16 @@
 						<img src="/images/logo.png" alt="Logo">
 					</div>
 				</div>
+				<div class="header__middle">
+					<div class="view-switch">
+						<button class="view-btn btn btn-sm btn-outline-secondary" data-view="table" type="button">
+							<i class="fa-solid fa-table"></i>
+						</button>
+						<button class="view-btn is-active btn btn-sm btn-outline-secondary" data-view="kanban" type="button">
+							<i class="fa-solid fa-table-columns"></i>
+						</button>
+					</div>
+				</div>
 				<div class="header__rside">
 					<ul class="navbar-nav navbar-nav-icons flex-row align-items-center">
 						<li class="nav-item ps-2 pe-0 dropdown">

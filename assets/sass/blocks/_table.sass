@@ -202,3 +202,48 @@
 	
 	.w-#{$value}
 		width: $value * 1%
+
++r($width_md)
+	.table-striped>tbody>tr:nth-of-type(odd)>*
+		--bs-table-bg-type: none
+
+.books-table
+	+r($width_md)
+		display: block
+
+		thead
+			display: none
+
+		tbody
+			display: block
+
+		tr
+			display: block
+			margin-bottom: 16px
+			padding: 12px
+			border: 1px solid #ddd
+			border-radius: 12px
+			background: #fff
+
+		td
+
+			display: flex
+			align-items: flex-start
+			gap: 16px
+
+			width: 100%
+			padding: 4px 0
+			border: none
+
+			&.text-center
+				text-align: left !important
+
+			&::before
+				content: attr(data-label)
+				flex-shrink: 0
+				min-width: 72px
+				font-weight: 600
+				opacity: .7
+
+			small
+				padding-top: 3px
