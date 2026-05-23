@@ -9,10 +9,10 @@
 <form action="/book-stock-list/" method="post" id="frm0" name="forMain">
 	<input type="hidden" id="tutor_id" name="tutor_id" value="<?php echo $tldata['id']?>">
 	<div class="row align-items-center">
-		<div class="col-md-8">
+		<div class="col-6 col-md-8">
 			<h2>Бронирование</h2>
 		</div>
-		<div class="col-md-4 text-end ctrlBtn">
+		<div class="col-6 col-md-4 text-end ctrlBtn">
 			<button class="btn btn-sm btn-primary" type="button" data-mod="add" data-page="one"><i class="fa fa-plus" aria-hidden="true"></i> Создать бронь</button>
 		</div>
 	</div>
@@ -108,6 +108,11 @@
 				</div>
 				<?php } elseif ($r['payment_id'] > 0 && $surcharge > 0) { ?>
 				<strong class="text-danger"><?php echo $r['paid_sum'];?></strong>
+				<?php } elseif ($r['paid_sum'] > $cost) { ?>
+				<strong class="text-info">
+					<?php echo $r['paid_sum'];?>
+					<br><small>переплата</small>
+				</strong>
 				<?php } else { ?>
 				<strong class="text-success"><?php echo $r['amount'];?></strong>
 				<?php } ?>

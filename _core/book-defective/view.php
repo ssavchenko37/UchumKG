@@ -42,7 +42,7 @@
 			<td class="align-middle" data-label="#"><?php echo $q?></td>
 			<td class="align-middle" data-label="Сотрудник"><?php echo $employee[$r['tutor_id']]?></td>
 			<td class="align-middle" data-label="Филиал" title="<?php echo $r['branch_id']?>"><?php echo $r['branch_name']?></td>
-			<td class="align-middle" data-label="Название" title="<?php echo $r['title']?>"><?php echo mb_substr($r['title'], 0, 20, 'UTF-8');?>...</td>
+			<td class="align-middle" data-label="Название" title="<?php echo $r['title']?>"><?php echo $r['title']?></td>
 			<td class="align-middle" data-label="Кол-во"><?php echo $r['qty']?></td>
 			<td class="align-middle" data-label="Коммент."><small><?php echo nl2br($r['comment'])?></small></td>
 			<td class="align-middle" data-label="Статус"><?php echo $defect_statuses[$r['status']]?></td>

@@ -686,7 +686,7 @@ class BookService
 		}
 	}
 
-	public function addPaymentPart(int $paymentId, int $tutorId, float $amount, string $method, ?string $comment = null): int 
+	public function addPaymentPart(int $paymentId, int $tutorId, float $amount, string $method, ?string $comment = null): array 
 	{
 
 		$ownTransaction = !$this->db->inTransaction();
@@ -704,12 +704,12 @@ class BookService
 
 			$newPaid = $payment['paid_amount'] + $amount;
 
-			// защита от переплаты
+			$overpayment = 0;
 			if (
 				$payment['expected_amount']
 				&& $newPaid > $payment['expected_amount']
 			) {
-				throw new \Exception('Overpayment');
+				$overpayment = $newPaid - $payment['expected_amount'];
 			}
 
 			$partId = $this->paymentParts->create(
@@ -739,7 +739,10 @@ class BookService
 				$this->db->commit();
 			}
 
-			return $partId;
+			return [
+				'part_id' => $partId,
+				'overpayment' => $overpayment
+			];
 
 		} catch (\Throwable $e) {
 			if ($this->db->inTransaction()) {

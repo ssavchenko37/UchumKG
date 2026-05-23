@@ -3,7 +3,7 @@
 
 $admin_id = ($tldata['umod'] == 'a') ? $tldata['id']: 1;
 $phone = cleanPhone($_POST['phone']);
-
+$overpayment = 0;
 $expected_amount = $_POST['qty']*$_POST['price'];
 
 if ($_POST['mode'] === 'add') {
@@ -26,7 +26,9 @@ if ($_POST['mode'] === 'add') {
 		elseif ($expected_amount > 0 && $_POST['amount'] < $expected_amount) {
 			// p('⚠️ частичная оплата');
 			$paymentId = $BS->createPartialPayment($resId, $admin_id, $expected_amount, 'transfer', $phone, $_POST['comment']);
-			$partId = $BS->addPaymentPart($paymentId, $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
+			$part_return = $BS->addPaymentPart($paymentId, $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
+			$partId = $part_return['part_id'];
+			$overpayment = $part_return['overpayment'];
 		}
 		else {
 			// p('✅ полная оплата');
@@ -77,13 +79,22 @@ if ($_POST['mode'] === 'edit') {
 		if ($_POST['amount'] > 0) {
 			if ($exist['expected_amount'] > 0) {
 				// p('уже partial-flow -> addPaymentPart');
-				$partId = $BS->addPaymentPart($exist['payment_id'], $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
+				$part_return = $BS->addPaymentPart($exist['payment_id'], $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
+				$partId = $part_return['part_id'];
+				$overpayment = $part_return['overpayment'];
 			} else {
 				// single-flow
 				if ($_POST['amount'] < $fullPrice) {
 					// p('🔥 автоматически переводим в partial payment и добавляем первую часть ->addPaymentPart');
 					$BS->convertToPartialPayment($exist['payment_id'], $fullPrice);
-					$partId = $BS->addPaymentPart($exist['payment_id'], $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
+					if ($exist['amount'] > 0) {
+						$part_return = $BS->addPaymentPart($exist['payment_id'], $admin_id, $exist['amount'], 'transfer', $exist['comment']);
+						$partId = $part_return['part_id'];
+						$overpayment = $part_return['overpayment'];
+					}
+					$part_return = $BS->addPaymentPart($exist['payment_id'], $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
+					$partId = $part_return['part_id'];
+					$overpayment = $part_return['overpayment'];
 				} else {
 					// p('полная оплата updatePayment');
 					$BS->updatePayment($exist['payment_id'], $_POST['amount'], $admin_id, $_POST['comment']);

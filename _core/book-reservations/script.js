@@ -36,7 +36,7 @@ const pageInit = () => {
 					selectBranch.appendChild(newOption);
 				}
 				inputPrice.value = data.book.price
-				inputNeede.innerHTML = 'Необходимая сумма: ' + parseInt(qtyReserv) * parseFloat(data.book.price);
+				inputNeede.innerHTML = parseInt(qtyReserv) * parseFloat(data.book.price);
 			});
 		}
 	}
@@ -45,7 +45,13 @@ const pageInit = () => {
 		const price = document.getElementById('price').value.trim();
 		const partTotal = document.getElementById('part_total').value.trim();
 		const inputNeede = document.getElementById('needed_amount');
-		inputNeede.innerHTML = parseInt(qtyReserv) * parseFloat(price) - partTotal;
+		const needed_price = parseInt(qtyReserv) * parseFloat(price) - partTotal;
+		inputNeede.innerHTML = needed_price;
+		if (needed_price > 0 ) {
+			document.getElementById('paid_block').classList.remove('hidden-preview');
+		} else {
+			document.getElementById('paid_block').classList.add('hidden-preview');
+		}
 	}
 
 	if ( mode.value === 'add' ) {

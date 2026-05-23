@@ -49,6 +49,10 @@ if ($reservation['where_go'] !== 'hand') {
 	}
 }
 $remain_amount = $reservation['qty'] * $reservation['price'];
+if ($reservation['payment_status'] != "partial") {
+	$reservation['parts'][0]['amount'] = $reservation['amount'];
+	$reservation['parts'][0]['part_comment'] = $reservation['comment'];
+}
 ?>
 
 <form method="post" enctype="multipart/form-data">
@@ -110,46 +114,45 @@ $remain_amount = $reservation['qty'] * $reservation['price'];
 		</div>
 
 		<?php
-		if ($reservation['payment_status'] === "partial") {
+		if ($mode != "add") {
 			$reservation['comment'] = '';
 			$remain_amount = $reservation['remain_amount'];
 			foreach ($reservation['parts'] as $part) {
 				$part_total = $part_total + $part['amount'];
 				?>
 				<div class="row mb-3 border-bottom border-top">
-					<label class="col-5 col-sm-4 col-form-label text-md-end">Оплачено:</label>
+					<label class="col-5 col-sm-4 col-form-label text-md-end text-success">Оплачено:</label>
 					<div class="col-7 col-sm-2">
-						<input type="text" readonly class="form-control-plaintext" value="<?php echo $part['amount']?>">
+						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['amount']?>">
 					</div>
-					<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end">Дата платежа:</label>
+					<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end text-success">Дата платежа:</label>
 					<div class="col-7 col-sm-3">
-						<input type="text" readonly class="form-control-plaintext" value="<?php echo $part['part_comment']?>">
+						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['part_comment']?>">
 					</div>
 				</div>
 				<?php
 			}
-			?>
-			<?php
 		}
 		?>
-
 		<input type="hidden" id="part_total" value="<?php echo $part_total?>">
-		<div class="row mb-3">
-			<label for="amount" class="col-12 col-sm-4 col-form-label text-md-end">Подтвержденная сумма:</label>
-			<div class="col-12 col-sm-8">
-				<input type="text" class="form-control" id="amount" name="amount" value="<?php echo $reservation['amount']?>">
-				<?php if ($mode == "add") { ?>
-					<small id="needed_amount"></small>
-				<?php } else { ?>
-					<small>Необходимая сумма: <small id="needed_amount"><?php echo $remain_amount?></small></small>
-				<?php } ?>
-			</div>
-		</div>
 
-		<div class="row mb-3">
-			<label for="comment" class="col-sm-4 col-form-label text-md-end">Дата и время платежа:</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control form-control-sm" id="comment" name="comment" value="<?php echo $reservation['comment']?>">
+		<?php
+		$paid_block = ($mode == "edit" && $reservation['payment_status'] == "confirmed")? "hidden-preview": "";
+		?>
+		<div id="paid_block" class="<?php echo $paid_block?>">
+			<div class="row mb-3">
+				<label for="amount" class="col-12 col-sm-4 col-form-label text-md-end">Подтвержденная сумма:</label>
+				<div class="col-12 col-sm-8">
+					<input type="text" class="form-control" id="amount" name="amount" value="">
+					<small>Необходимая сумма: <span id="needed_amount"><?php echo $remain_amount?></span></small>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<label for="comment" class="col-sm-4 col-form-label text-md-end">Дата и время платежа:</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control form-control-sm" id="comment" name="comment" value="">
+				</div>
 			</div>
 		</div>
 

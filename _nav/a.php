@@ -61,7 +61,7 @@
 	</a>
 </li>
 
-<?php if ($tldata['usr']['root'] === 1) { ?>
+<?php if ($tldata['usr']['root'] == 1) { ?>
 <li class="nav__item">
 	<a class="nav__link" href="/book-defective/" role="button">
 		<span class="nav__icon"><i class="fa-solid fa-book-skull"></i></span>

@@ -1,48 +1,55 @@
 <?php
 /** @var array $tldata */
+/** @var int $order_id */
 /** @var array $branches */
 /** @var array $tutors */
 /** @var array $orders */
 /** @var array $employee */
-/** @var array $order_id */
+/** @var array $paginator */
 /** @var array $sort_by */
 /** @var array $sort_val */
 ?>
-<form action="/book-sold/" method="post" id="frm0" name="forMain">
+<form action="/book-sold/" method="get" id="frm0" name="forMain" target="_self">
 	<input type="hidden" id="tutor_id" name="tutor_id" value="<?php echo $tldata['id']?>">
+	<input type="hidden" id="page_number" name="page_number" value="">
 	<div class="row align-items-center">
-		<div class="col-md-8">
+		<div class="col-6 col-md-8">
 			<h2>Список продаж</h2>
+		</div>
+		<div class="col-6 col-md-4 text-end pb-1 pb-md-0">
+			<button class="btn btn-sm btn-primary" type="submit" formaction="/book-sold-import/" formtarget="_blank">
+				<i class="fa-solid fa-file-pdf"></i> &nbsp;Импорт
+			</button>
 		</div>
 	</div>
 
 	<div class="card border border-secondary-subtle">
 		<div class="card-header py-2 bg-light border-bottom border-secondary-subtle">
 			<div class="row">
-				<div class="col">
+				<div class="col-12 col-md-2">
 					<label class="form-label form-label">Быстрый поиск по: </label>
 				</div>
-				<div class="col">
+				<div class="col-6 col-md-2">
 					<input type="text" class="form-control form-control-sm" id="by_phone" name="by_phone" placeholder="по телефону">
 				</div>
-				<div class="col">
+				<div class="col-6 col-md-2">
 					<select class="form-select form-select-sm" id="by_branch" name="by_branch">
 						<option value="0">-- по филиалам</option>
 						<?php echo getOptionsK('', $branches)?>
 					</select>
 				</div>
-				<div class="col">
+				<div class="col-6 col-md-2">
 					<select class="form-select form-select-sm" id="by_tutor" name="by_tutor">
 						<option value="0">-- по сотрудникам</option>
 						<?php echo getOptionsK('', $tutors)?>
 					</select>
 				</div>
-				<div class="col">
+				<div class="col-6 col-md-2">
 					<select class="form-select form-select-sm" id="by_delivery" name="by_delivery">
 						<?php echo getOptionsK('', ['-- по типу передачи','Бронь / Доставка','Бронь / На руки','Прямая / На руки'])?>
 					</select>
 				</div>
-				<div class="col text-end">
+				<div class="col-12 col-md-2 text-end pt-2 pt-md-0">
 					<button class="btn btn-sm btn-secondary" type="button" data-bs-toggle="collapse" href="#collapseCBody" role="button" aria-expanded="false" aria-controls="collapseCBody">
 						Фильтры
 					</button>
@@ -86,10 +93,10 @@
 				</div>
 
 				<div class="row mt-3">
-					<div class="col-sm-6 text-start">
+					<div class="col-6 text-start">
 						<a href="/book-sold/" class="btn btn-sm btn-info">Очистить</a>
 					</div>
-					<div class="col-sm-6 text-end">
+					<div class="col-6 text-end">
 						<button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" href="#collapseCBody" role="button" aria-expanded="false" aria-controls="collapseCBody">
 							Закрыть
 						</button>
@@ -99,26 +106,33 @@
 		</div>
 	</div>
 
-	<nav class="pt-2" aria-label="Page navigation example">
+	<!-- <nav class="pt-2" aria-label="Page navigation example">
 		<ul class="pagination pagination-sm justify-content-center">
-			<li class="page-item">
-				<a class="page-link" href="#" aria-label="Previous">
+			<li class="page-item<?php if ($paginator['page'] <= 1) echo " disabled"?>">
+				<a class="page-link" data-page="<?php echo $paginator['page']-1?>" href="#" aria-label="Previous">
 					<span aria-hidden="true">&laquo;</span>
 				</a>
 			</li>
-			<li class="page-item active"><a class="page-link" href="#">1</a></li>
-			<li class="page-item"><a class="page-link" href="#">2</a></li>
-			<li class="page-item"><a class="page-link" href="#">3</a></li>
-			<li class="page-item">
-				<a class="page-link" href="#" aria-label="Next">
+			<?php
+			for ($i=1; $i <= $paginator['total_pages']; $i++) {
+				$is_page_active = ($paginator['page'] === $i)? " active": "";
+				?>
+				<li class="page-item<?php echo $is_page_active?>">
+					<a class="page-link" href="#" data-page="<?php echo $i?>"><?php echo $i?></a>
+				</li>
+				<?php
+			}
+			?>
+			<li class="page-item <?php echo ($paginator['page'] >= $paginator['total_pages']) ? 'disabled' : ''; ?>">
+				<a class="page-link" data-page="<?php echo $paginator['page']+1?>" href="#" aria-label="Next">
 					<span aria-hidden="true">&raquo;</span>
 				</a>
 			</li>
-	  </ul>
-	</nav>
+		</ul>
+	</nav> -->
 </form>
 
-<table class="table table-striped table-hover border-secondary-subtle">
+<table class="table books-table table-striped table-hover border-secondary-subtle">
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
@@ -134,7 +148,7 @@
 	</thead>
 	<tbody>
 	<?php
-	$q = 1;
+	$q = 1 + $paginator['offset'];
 	foreach ($orders as $r) {
 		$tr_class = ($order_id == $r['order_id']) ? "table-success": "";
 		$sale_type = ($r['reservation_id'] > 0) ? "Бронь": "Прямая";
@@ -150,20 +164,20 @@
 			data-delivery="<?php echo $delivery_type?>"
 			data-branch="<?php echo $r['branch_id']?>"
 			data-tutor="<?php echo $r['tutor_id']?>">
-			<td class="align-middle"><?php echo $q?></td>
-			<td class="align-middle" title="<?php echo $r['tutor_id']?>">
+			<td class="align-middle" data-label="#"><?php echo $q?></td>
+			<td class="align-middle" data-label="Сотрудник" title="<?php echo $r['tutor_id']?>">
 				<?php echo $employee[$r['tutor_id']]?>
 				<br><small><?php echo $r['odate']?></small>
 			</td>
-			<td class="align-middle" title="<?php echo $r['branch_id']?>"><?php echo $r['branch_name']?></td>
+			<td class="align-middle" data-label="Филиал" title="<?php echo $r['branch_id']?>"><?php echo $r['branch_name']?></td>
 			<!-- <td class="align-middle" title="<?php echo $r['book_id']?>"><?php echo $r['title']?><br><small><?php echo $r['author']?></small></td> -->
-			<td class="align-middle"><?php echo $delivery?><br><small><?php echo $r['for_courier']?></small></td>
-			<td class="align-middle"><?php echo $r['phone']?></td>
-			<td class="align-middle"><?php echo $r['qty']?></td>
-			<td class="align-middle"><?php echo $r['total_amount']?><br><small><?php echo $r['comment']?></small></td>
-			<td class="align-middle"><small><?php echo $sale_type?><br><?php echo $is_delivery?></small></td>
+			<td class="align-middle" data-label="Доставка"><?php echo $delivery?><br><small><?php echo $r['for_courier']?></small></td>
+			<td class="align-middle" data-label="Телефон"><?php echo $r['phone']?></td>
+			<td class="align-middle" data-label="Кол-во"><?php echo $r['qty']?></td>
+			<td class="align-middle" data-label="Сумма"><?php echo $r['total_amount']?><br><small><?php echo $r['comment']?></small></td>
+			<td class="align-middle" data-label="Продажа"><small><?php echo $sale_type?><br><?php echo $is_delivery?></small></td>
 			
-			<td class="align-middle">
+			<td class="align-middle" data-label="">
 				<div class="text-end ctrlBtn" data-pid="<?php echo $r['order_id']?>">
 					<button class="btn btn-info btn-sm-ico" type="button" data-page="details"><i class="fa-solid fa-circle-info"></i></button>
 				</div>

@@ -74,10 +74,10 @@
 			data-branch="<?php echo $r['branch_id']?>" 
 			data-shortage="<?php echo $data_shortage?>">
 			<td class="align-middle" data-label="#">
+				<?php echo $q?>
 				<div class="where-go-marker">
 					<div class="marker marker--<?php echo $r['where_go']?>"><?php echo $where_translate[$r['where_go']]?></div>
 				</div>
-				<?php echo $q?>
 			</td>
 			<td class="align-middle" data-label="Филиал"><?php echo $r['branch_name']?></td>
 			<td class="align-middle" data-label="Название"><?php echo $r['title']?><br><small><?php echo $r['author']?></small></td>

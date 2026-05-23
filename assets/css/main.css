@@ -157,6 +157,11 @@ small.form-text {
   color: #5e6e82;
 }
 
+input + small {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.8125rem;
+}
+
 .caption {
   font-weight: 600;
   font-size: 14px;
@@ -226,7 +231,7 @@ small.form-text {
 }
 @media only screen and (min-width: 1024px) {
   .where-go-marker .marker {
-    left: -10px;
+    left: -40px;
     -webkit-transform: translateY(-250%);
         -ms-transform: translateY(-250%);
             transform: translateY(-250%);
@@ -243,7 +248,7 @@ small.form-text {
 @media only screen and (min-width: 1024px) {
   .books-table .where-go-marker .marker {
     top: 0;
-    left: -10px;
+    left: -24px;
     -webkit-transform: translateY(-250%);
         -ms-transform: translateY(-250%);
             transform: translateY(-250%);

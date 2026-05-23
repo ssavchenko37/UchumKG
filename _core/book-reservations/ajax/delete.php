@@ -23,9 +23,9 @@ $mode = $_POST['mod'];
         </div>
 
         <div class="row mb-3">
-            <div class="offset-sm-3 col-sm-9 d-flex justify-content-between">
+            <div class="offset-sm-3 col-sm-9 d-flex flex-column flex-md-row align-items-center justify-content-md-between">
                 <button class="btn btn-secondary dismiss-tlaside" type="button" aria-label="Close"> Отменить, не удалять </button>
-                <button type="submit" class="btn btn-primary w-50"> Да, удалить </button>
+                <button type="submit" class="btn btn-primary w-50 mt-3 mt-md-0"> Да, удалить </button>
             </div>
         </div>
 		

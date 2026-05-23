@@ -35,65 +35,65 @@ $delivery_address = (empty($order['delivery_to'])) ? "На руки": $order['de
 		<h5 class="mt-2 mb-5"><?php echo $sTTL?></h5>
 
 		<div class="row mb-3">
-			<label class="col-sm-3 col-form-label text-end">Филиал:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Филиал:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order['branch_name']?>">
 			</div>
-			<label class="col-sm-3 col-form-label text-end">Преподаватель:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Преподаватель:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $employee[$order['tutor_id']]?>">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label class="col-sm-3 col-form-label text-end">Книга:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Книга:</label>
 			<div class="col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order['title']?> / <?php echo $order['author']?>">
 			</div>
 		</div>
 
 		<div class="row mb-2">
-			<label class="col-sm-3 col-form-label text-end">Цена экземпляра:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Цена экземпляра:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php  echo $order['price']?>">
 			</div>
-			<label class="col-sm-2 col-form-label text-end">Кол-во:</label>
+			<label class="col-sm-2 col-form-label text-md-end">Кол-во:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php  echo $order['qty']?>">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label class="col-sm-3 col-form-label text-end">Сумма:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Сумма:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order['total_amount']?>">
 			</div>
-			<label class="col-sm-2 col-form-label text-end">Время оплаты:</label>
+			<label class="col-sm-2 col-form-label text-md-end">Время оплаты:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order['comment']?>">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label class="col-sm-3 col-form-label text-end">Метод заказа:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Метод заказа:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order_method?>">
 			</div>
-			<label class="col-sm-2 col-form-label text-end">Время заказа:</label>
+			<label class="col-sm-2 col-form-label text-md-end">Время заказа:</label>
 			<div class="col-sm-3">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order['paid_at']?>">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label class="col-sm-3 col-form-label text-end">Адрес доставки:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Адрес доставки:</label>
 			<div class="col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $delivery_address?>">
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label class="col-sm-3 col-form-label text-end">Телефон покупателя:</label>
+			<label class="col-sm-3 col-form-label text-md-end">Телефон покупателя:</label>
 			<div class="col-sm-9">
 				<input type="text" readonly class="form-control-plaintext" value="<?php echo $order['phone']?>">
 			</div>
@@ -101,15 +101,15 @@ $delivery_address = (empty($order['delivery_to'])) ? "На руки": $order['de
 
 		<?php if ($tldata['usr']['root'] === 1) { ?>
 		<div class="row mb-3">
-			<label class="col-sm-9 col-form-label text-end">Отменить продажу:</label>
-			<div class="col-sm-3 text-end">
+			<label class="col-sm-9 col-form-label text-md-end">Отменить продажу:</label>
+			<div class="col-sm-3 text-md-end">
 				<button class="btn btn-sm btn-danger" type="button" id="cancel_sale"> <i class="fa-solid fa-rotate-left"></i>&nbsp;Отменить </button>
 			</div>
 		</div>
 		<?php } ?>
 
 		<div class="row mb-3">
-			<label for="for_courier" class="col-sm-3 col-form-label text-end">Комментарий:</label>
+			<label for="for_courier" class="col-sm-3 col-form-label text-md-end">Комментарий:</label>
 			<div class="col-sm-9">
 				<textarea class="form-control" id="for_courier" name="for_courier"><?php echo $order['for_courier']?></textarea>
 			</div>

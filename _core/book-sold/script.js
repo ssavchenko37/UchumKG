@@ -15,3 +15,16 @@ for(let elm of document.getElementsByClassName('status_filter')) {
 		document.getElementById('frm0').submit();
 	});
 }
+
+for(let page_link of document.getElementsByClassName('page_link')) {
+	page_link.addEventListener('click', (e) => {
+		e.preventDefault();
+		const pageInput = document.getElementById('page_number');
+    
+		if (pageInput) {
+			pageInput.value = page_link.dataset.page;
+			document.getElementById('frm0').submit();
+		}
+		
+	});
+}
