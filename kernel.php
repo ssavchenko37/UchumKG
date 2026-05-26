@@ -7,7 +7,7 @@ if (preg_match ("/(192.168|10.4.100|10.4.101|10.211.55|127.0.0)/i", $_SERVER["SE
 	define('PRO_HOST', 'http://tilkg');
 } else {
 	define('S_SRV', 'remote');
-	define('PRO_HOST', 'http://tilkg.kg');
+	define('PRO_HOST', 'https://uchim.kg');
 }
 
 define('TL_SECRET', 'ce25d8f23ba');

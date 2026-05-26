@@ -764,11 +764,14 @@ class BookService
 		if ($paid <= 0) {
 			$status = 'new';
 		}
-
+		p($paid);
+		p($payment['expected_amount']);
 		if ($payment['expected_amount'] && $paid >= $payment['expected_amount']) {
 			$status = 'confirmed';
 			$amount = $paid;
 		}
+		p($paid >= $payment['expected_amount']);
+		p($status);
 
 		$this->payments->updatePaidAmount(
 			$paymentId,

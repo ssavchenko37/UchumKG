@@ -18,7 +18,7 @@
 		</div>
 		<div class="col-6 col-md-4 text-end pb-1 pb-md-0">
 			<button class="btn btn-sm btn-primary" type="submit" formaction="/book-sold-import/" formtarget="_blank">
-				<i class="fa-solid fa-file-pdf"></i> &nbsp;Импорт
+				<i class="fa-solid fa-file-excel"></i> &nbsp;Импорт
 			</button>
 		</div>
 	</div>

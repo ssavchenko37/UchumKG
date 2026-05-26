@@ -20,7 +20,7 @@ if ($_POST['mode'] == "delete") {
 	// $DB->query('DELETE FROM ?_tutors WHERE book_id=?', $id);
 }
 
-// header("Cache-control: private");
-// header("HTTP/1.1 301 Moved Permanently");
-// header("Location: " . $_SERVER['REQUEST_URI']);
-// exit;
+header("Cache-control: private");
+header("HTTP/1.1 301 Moved Permanently");
+header("Location: " . $_SERVER['REQUEST_URI']);
+exit;
