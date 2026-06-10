@@ -19,9 +19,9 @@ if ($_POST['mode'] === 'add') {
 			// p('❌ нет оплаты');
 			$paid_amount = 0;
 			$paymentId = $BS->createPayment($resId, $amount, $paid_amount, 'transfer', $admin_id, $phone, $_POST['comment']);
-			if ($_POST['where_go'] === 'hand') {
-				$BS->confirmPayment($paymentId, $admin_id);
-			}
+			// if ($_POST['where_go'] === 'hand') {
+			// 	$BS->confirmPayment($paymentId, $admin_id);
+			// }
 		}
 		elseif ($expected_amount > 0 && $_POST['amount'] < $expected_amount) {
 			// p('⚠️ частичная оплата');
@@ -35,7 +35,9 @@ if ($_POST['mode'] === 'add') {
 			$amount = $_POST['amount'];
 			$paid_amount = $expected_amount;
 			$paymentId = $BS->createPayment($resId, $amount, $paid_amount, 'transfer', $admin_id, $phone, $_POST['comment']);
-			$BS->confirmPayment($paymentId, $admin_id);
+			if ($amount == $expected_amount) {
+				$BS->confirmPayment($paymentId, $admin_id);
+			}
 		}
 
 		$BS->commit();
@@ -49,32 +51,51 @@ if ($_POST['mode'] === 'add') {
 }
 
 if ($_POST['mode'] === 'edit') {
-	$existQty = $DB->selectCell('SELECT qty FROM ?_bk_reservations WHERE reservation_id=?', $_POST['pid']);
-	$existPaymentStatus = $DB->selectCell('SELECT status FROM ?_bk_payments WHERE reservation_id=?', $_POST['pid']);
+	$exist = $DB->selectRow('SELECT R.*, P.payment_id, P.amount, P.comment, P.expected_amount, P.paid_amount 
+		FROM ?_bk_reservations R
+		JOIN ?_bk_payments P ON R.reservation_id = P.reservation_id
+		WHERE R.reservation_id=?'
+		, $_POST['pid']
+	);
+	$existPaymentStatus = $exist['status'];
+	$existQty = $exist['qty'];
+	
 	$diff = $_POST['qty'] - $existQty;
 	$fullPrice = $_POST['qty']*$_POST['price'];
 
-	$BS->begin();
+	$exist = $DB->selectRow('SELECT R.*, P.payment_id, P.amount, P.comment, P.expected_amount, P.paid_amount 
+		FROM ?_bk_reservations R
+		JOIN ?_bk_payments P ON R.reservation_id = P.reservation_id
+		WHERE R.reservation_id=?'
+		, $_POST['pid']
+	);
 
-	try {
-
-		$BS->updateReservation($_POST['pid'], $diff, $phone, $admin_id, $_POST['branch_id'], $_POST['where_go'], $_POST['delivery_to'], $_POST['for_courier']);
-		if ($diff !== 0) {
-			$DB->query('UPDATE ?_bk_payments SET expected_amount = ? WHERE reservation_id=? AND expected_amount IS NOT NULL', $fullPrice, $_POST['pid']);
+	if ($diff !== 0) {
+		$BS->updateExpectedAmount($exist['payment_id'], $fullPrice);
+		if ($payment['expected_amount'] === null && $_POST['amount'] < $fullPrice) { // tyt nado proveryat esli ne polnyi platej?
+			$BS->convertSingleToPartial($exist['payment_id'], $fullPrice);
 		}
-		if ($_POST['where_go'] === 'hand' && $existPaymentStatus === 'new') {
-			$DB->query('UPDATE ?_bk_payments SET status = ? WHERE reservation_id=? AND status = ?', 'confirmed', $_POST['pid'], 'new');
-		}
-		if ($_POST['where_go'] !== 'hand' && $existPaymentStatus === 'confirmed') {
-			$DB->query('UPDATE ?_bk_payments SET status = ? WHERE reservation_id=? AND status = ?', 'new', $_POST['pid'], 'confirmed');
-		}
-
 		$exist = $DB->selectRow('SELECT R.*, P.payment_id, P.amount, P.comment, P.expected_amount, P.paid_amount 
 			FROM ?_bk_reservations R
 			JOIN ?_bk_payments P ON R.reservation_id = P.reservation_id
 			WHERE R.reservation_id=?'
 			, $_POST['pid']
 		);
+		$existPaymentStatus = $exist['status'];
+	}
+
+	$BS->begin();
+
+	try {
+
+		$BS->updateReservation($_POST['pid'], $diff, $phone, $admin_id, $_POST['branch_id'], $_POST['where_go'], $_POST['delivery_to'], $_POST['for_courier']);
+
+		if ($_POST['where_go'] === 'hand' && $existPaymentStatus === 'new') {
+			$DB->query('UPDATE ?_bk_payments SET status = ? WHERE reservation_id=? AND status = ?', 'confirmed', $_POST['pid'], 'new');
+		}
+		if ($_POST['where_go'] !== 'hand' && $existPaymentStatus === 'confirmed') {
+			$DB->query('UPDATE ?_bk_payments SET status = ? WHERE reservation_id=? AND status = ?', 'new', $_POST['pid'], 'confirmed');
+		}
 
 		if ($_POST['amount'] > 0) {
 			if ($exist['expected_amount'] > 0) {

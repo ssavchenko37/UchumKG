@@ -9,6 +9,17 @@ $mode = $_POST['mod'];
 $reservation_id = $DB->selectCell('SELECT reservation_id FROM ?_bk_payments WHERE payment_id=?', $id);
 $payment = $BS->getPayment($reservation_id);
 
+if (!empty($payment['payment_id']) && $payment['expected_amount'] === null) {
+
+	$payment['history'][] = [
+		'amount' => $payment['amount'],
+		'method' => $payment['method'],
+		'comment' => $payment['comment'],
+		'type' => 'single',
+		'created' => $payment['created']
+	];
+}
+
 $check_delivery = "";
 $check_hand = " checked";
 if (!empty($payment['delivery_to'])) {
@@ -64,56 +75,38 @@ if ($payment['amount'] < $fullPrice) {
 		</div>
 
 		<?php
-		if ($payment['payment_status'] === "partial") {
-			$remain_amount = $payment['remain_amount'];
-			foreach ($payment['parts'] as $part) {
-				$part_total = $part_total + $part['amount'];
-				?>
-				<div class="row mb-3 border-bottom border-top">
-					<label class="col-5 col-sm-3 col-form-label text-md-end text-success">Оплачено:</label>
-					<div class="col-7 col-sm-2">
-						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['amount']?>">
+			$remain_amount = ($payment['remain_amount'] > 0) ? $payment['remain_amount']: $fullPrice;
+			if (is_array($payment['history'])) {
+				foreach ($payment['history'] as $part) {
+					$part_total = $part_total + $part['amount'];
+					?>
+					<div class="row mb-3 border-bottom border-top">
+						<label class="col-5 col-sm-3 col-form-label text-md-end text-success">Оплачено:</label>
+						<div class="col-7 col-sm-2">
+							<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['amount']?>">
+						</div>
+						<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end text-success">Дата платежа:</label>
+						<div class="col-7 col-sm-3">
+							<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['comment']?>">
+						</div>
 					</div>
-					<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end text-success">Дата платежа:</label>
-					<div class="col-7 col-sm-3">
-						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['part_comment']?>">
+					<?php
+				}
+			}
+			if ($payment['paid_amount'] < $fullPrice) {
+				?>
+				<div class="row mb-3">
+					<label for="amount" class="col-12 col-sm-3 col-form-label text-md-end text-danger">Доплата:</label>
+					<div class="col-12 col-sm-8">
+						<input type="text" class="form-control" id="amount" name="amount" value="<?php echo $payment['amount']?>">
+						<small class="text-danger">Необходимо: <small id="needed_amount"><?php echo $remain_amount?></small></small>
 					</div>
 				</div>
 				<?php
 			}
-			$payment['comment'] = "";
-			?>
-			<input type="hidden" id="part_total" value="<?php echo $part_total?>">
-			<?php
-		}
 		?>
 
-		<?php if ($payment['payment_type'] === "single") { ?>
-		<div class="row mb-3">
-			<label for="amount" class="col-4 col-sm-3 col-form-label text-md-end text-success">Оплачено:</label>
-			<div class="col-8 col-sm-8">
-				<input type="text" readonly class="form-control text-success" id="amount" name="amount" value="<?php echo $payment['amount']?>">
-			</div>
-		</div>
-		<?php } ?>
-
-		<?php if ($payment['payment_type'] === "partial") { ?>
-		<div class="row mb-3">
-			<label for="amount" class="col-12 col-sm-3 col-form-label text-md-end text-danger">Доплата:</label>
-			<div class="col-12 col-sm-8">
-				<input type="text" class="form-control" id="amount" name="amount" value="<?php echo $payment['amount']?>">
-				<small class="text-danger">Необходимо: <small id="needed_amount"><?php echo $remain_amount?></small></small>
-			</div>
-		</div>
-		<?php } ?>
-
-		<div class="row mb-3">
-			<label for="comment" class="col-12 col-sm-3 col-form-label text-md-end">Дата платежа:</label>
-			<div class="col-12 col-sm-8">
-				<input type="text" class="form-control form-control-sm" id="comment" name="comment" value="<?php echo $payment['comment']?>">
-			</div>
-		</div>
-
+		<input type="hidden" id="part_total" value="<?php echo $part_total?>">
 		<div class="row mb-2">
 			<label class="col-4 col-sm-3 col-form-label text-md-end">Телефон:</label>
 			<div class="col-8 col-sm-9">

@@ -51,9 +51,9 @@ class PaymentRepository
     {
         $this->db->prepare("
             UPDATE tl_bk_payments
-            SET amount = amount + ?, comment = ?
+            SET amount = amount + ?, paid_amount = ?, comment = ?
             WHERE payment_id = ?
-        ")->execute([$surcharge, $comment, $paymentId]);
+        ")->execute([$surcharge, $surcharge, $comment, $paymentId]);
     }
 
     public function confirm(int $paymentId): void
@@ -74,18 +74,16 @@ class PaymentRepository
         ")->execute([$paymentId]);
     }
 
-    public function updatePaidAmount(int $paymentId, float $mainAmount, float $paidAmount, string $status): void 
+    public function updatePaidAmount(int $paymentId, float $mainAmount, string $status): void 
     {
         $this->db->prepare("
             UPDATE tl_bk_payments
             SET
-                amount = ?,
                 paid_amount = ?,
                 status = ?
             WHERE payment_id = ?
         ")->execute([
             $mainAmount,
-            $paidAmount,
             $status,
             $paymentId
         ]);

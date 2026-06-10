@@ -24,6 +24,9 @@ if ($mode === 'order') {
 			if ($exist['expected_amount'] > 0) {
 				$partId = $BS->addPaymentPart($exist['payment_id'], $admin_id, $_POST['amount'], 'transfer', $_POST['comment']);
 			} else {
+				if ($_POST['full_price'] == $_POST['amount']) {
+					$BS->confirmPayment($exist['payment_id'], $admin_id);
+				}
 				$BS->updatePayment($exist['payment_id'], $_POST['amount'], $admin_id, $_POST['comment']);
 			}
 		}

@@ -1,12 +1,56 @@
 "use strict";
 
+const verifyForm = () => {
+	document.getElementById('action_form').addEventListener('submit', function(event) {
+		event.preventDefault();
+
+		const phone = document.getElementById('phone');
+		const book_id = document.getElementById('book_id').value;
+		const qty = document.getElementById('qty');
+		const branch_id = document.getElementById('branch_id');
+		const delivery_to = document.getElementById('delivery_to');
+
+		if (phone.value.trim() === '') {
+			phone.focus();
+			alert('Пожалуйста, введите телефон.');
+			return; 
+		}
+		if (book_id === '') {
+		  alert('Пожалуйста, выберите книгу.');
+		  return;
+		}
+		if (qty.value.trim() === '') {
+			qty.focus();
+			alert('Пожалуйста, укажите количество.');
+			return; 
+		}
+		if (branch_id.value === '') {
+			branch_id.focus();
+			alert('Пожалуйста, выберите филиал.');
+			return;
+		}
+
+		const where_go = document.querySelector('input[name="where_go"]:checked');
+		if(where_go.value !== "hand") {
+			if (delivery_to.value.trim() === '') {
+				delivery_to.focus();
+				alert('Пожалуйста, укажите адрес доставки.');
+				return; 
+			}
+			
+		}
+		this.submit();
+	  });
+}
+
 const pageInit = () => {
-	const selectBranch = document.getElementById('branch_id');
+	const inputPhone = document.getElementById('phone');
 	const selectBooks = document.getElementById('book_id');
 	const inputQty = document.getElementById('qty');
+	const selectBranch = document.getElementById('branch_id');
 	const inputPrice = document.getElementById('price');
 	const inputAmount = document.getElementById('amount');
-	const inputNeede = document.getElementById('needed_amount');
+	const inputNeeded = document.getElementById('needed_amount');
 
 	const mode = document.getElementById('mode');
 	if (!mode) return;
@@ -36,7 +80,7 @@ const pageInit = () => {
 					selectBranch.appendChild(newOption);
 				}
 				inputPrice.value = data.book.price
-				inputNeede.innerHTML = parseInt(qtyReserv) * parseFloat(data.book.price);
+				inputNeeded.innerHTML = parseInt(qtyReserv) * parseFloat(data.book.price);
 			});
 		}
 	}
@@ -44,9 +88,9 @@ const pageInit = () => {
 		const qtyReserv = document.getElementById('qty').value.trim();
 		const price = document.getElementById('price').value.trim();
 		const partTotal = document.getElementById('part_total').value.trim();
-		const inputNeede = document.getElementById('needed_amount');
+		const inputNeeded = document.getElementById('needed_amount');
 		const needed_price = parseInt(qtyReserv) * parseFloat(price) - partTotal;
-		inputNeede.innerHTML = needed_price;
+		inputNeeded.innerHTML = needed_price;
 		if (needed_price > 0 ) {
 			document.getElementById('paid_block').classList.remove('hidden-preview');
 		} else {
@@ -85,7 +129,11 @@ const pageInit = () => {
 		});
 	}
 
+	// if (mode.value === 'edit') {
+	// 	recalcNeeded();
+	// }
 	setTimeout(paymentDateHandler, 100);
+	verifyForm();
 }
 
 const amountCheck = () => {

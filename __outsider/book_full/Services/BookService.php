@@ -752,30 +752,44 @@ class BookService
 		}
 	}
 
+	public function updateExpectedAmount(int $paymentId, float $expectedAmount)
+	{
+		$payment = $this->payments->getForUpdate($paymentId);
+
+		$status = 'partial';
+
+		if ($payment['expected_amount'] > 0) {
+			if ($payment['paid_amount'] >= $expectedAmount) {
+				$status = 'confirmed';
+			}
+
+			$this->db->prepare("
+				UPDATE tl_bk_payments
+				SET expected_amount = ?, status = ?
+				WHERE payment_id = ? AND expected_amount IS NOT NULL
+			")->execute([$expectedAmount, $status, $paymentId]);
+		}
+	}
+
 	public function recalculatePayment(int $paymentId): void
 	{
 		$payment = $this->payments->getForUpdate($paymentId);
 
-		$paid = $this->paymentParts->getTotal($paymentId);
+		$partsTotal = $this->paymentParts->getTotal($paymentId);
+		$paid = (float)$payment['amount'] + $partsTotal;
 
 		$status = 'partial';
-		$amount = 0;
 
 		if ($paid <= 0) {
 			$status = 'new';
 		}
-		p($paid);
-		p($payment['expected_amount']);
-		if ($payment['expected_amount'] && $paid >= $payment['expected_amount']) {
+
+		if ($payment['expected_amount'] > 0 && $paid >= $payment['expected_amount']) {
 			$status = 'confirmed';
-			$amount = $paid;
 		}
-		p($paid >= $payment['expected_amount']);
-		p($status);
 
 		$this->payments->updatePaidAmount(
 			$paymentId,
-			$amount,
 			$paid,
 			$status
 		);
@@ -787,6 +801,20 @@ class BookService
 			SET expected_amount = ?, paid_amount = 0, status = 'partial'
 			WHERE payment_id = ?
 		")->execute([$expectedAmount,$paymentId]);
+	}
+
+	public function convertSingleToPartial(int $paymentId, float $newExpectedAmount): void
+	{
+		$payment = $this->payments->getForUpdate($paymentId);
+
+		if ($payment['expected_amount'] !== null) {
+			return; // уже partial
+		}
+
+		$this->db->prepare("UPDATE tl_bk_payments
+			SET expected_amount = ?, paid_amount = amount, status = 'partial'
+			WHERE payment_id = ?
+		")->execute([$newExpectedAmount,$paymentId]);
 	}
 
 	public function getPayments(string $status = 'active'): array
@@ -825,18 +853,16 @@ class BookService
 					ELSE 'partial'
 				END AS payment_type,
 
-				COUNT(pp.part_id) AS parts_count,
-
-				CASE
-					WHEN p.expected_amount IS NOT NULL
-					THEN IFNULL(SUM(pp.amount), 0)
-					ELSE p.amount
-				END AS paid_sum,
+				IF(
+					p.expected_amount IS NULL,
+					p.amount,
+					p.paid_amount
+				) AS paid_sum,
 
 				CASE
 					WHEN p.expected_amount IS NOT NULL
 					THEN GREATEST(
-						p.expected_amount - IFNULL(SUM(pp.amount), 0),
+						p.expected_amount - p.paid_amount,
 						0
 					)
 					ELSE 0
@@ -846,7 +872,19 @@ class BookService
 					ST.qty_total
 					- ST.qty_sold
 					- ST.qty_defect
-				) AS available
+				) AS available,
+
+				CASE
+					WHEN p.expected_amount IS NOT NULL
+					THEN (
+						SELECT pp.comment
+						FROM tl_bk_payment_parts pp
+						WHERE pp.payment_id = p.payment_id
+						ORDER BY pp.part_id DESC
+						LIMIT 1
+					)
+					ELSE p.comment
+				END AS payment_comment
 
 			FROM tl_bk_reservations r
 
@@ -862,9 +900,6 @@ class BookService
 
 			LEFT JOIN tl_bk_payments p
 				ON r.reservation_id = p.reservation_id
-
-			LEFT JOIN tl_bk_payment_parts pp
-				ON pp.payment_id = p.payment_id
 
 			WHERE r.status = ?
 
@@ -964,19 +999,16 @@ class BookService
 		// ЧАСТИЧНЫЕ ПЛАТЕЖИ
 		// =====================================
 
-		$payment['parts'] = [];
+		$history = [];
 
-		if (
-			!empty($payment['payment_id'])
-			&& $payment['payment_type'] === 'partial'
-		) {
+		if (!empty($payment['payment_id']) && $payment['payment_type'] === 'partial') {
 
 			$stmt = $this->db->prepare("
 				SELECT
 					part_id,
 					amount,
 					method,
-					comment AS part_comment,
+					comment,
 
 					DATE_FORMAT(
 						created_at,
@@ -994,7 +1026,27 @@ class BookService
 				$payment['payment_id']
 			]);
 
-			$payment['parts'] = $stmt->fetchAll();
+			$parts = $stmt->fetchAll();
+
+			$payment['history'] = [];
+
+			if ($payment['amount'] > 0 && $payment['expected_amount'] !== null) {
+				$payment['history'][] = [
+					'created' => $payment['created'],
+					'amount' => $payment['amount'],
+					'comment' => $payment['comment'],
+					'type' => 'initial'
+				];
+			}
+
+			foreach ($parts as $part) {
+				$payment['history'][] = [
+					'created' => $part['created'],
+					'amount' => $part['amount'],
+					'comment' => $part['comment'],
+					'type' => 'part'
+				];
+			}
 		}
 
 		return $payment;

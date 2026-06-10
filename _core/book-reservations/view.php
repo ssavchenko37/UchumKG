@@ -68,7 +68,7 @@
 		$surcharge = 0;
 		$not_enough = "default";
 		$amount_color = 'text-success';
-		if ($r['amount'] < $cost && $r['payment_id']) {
+		if ($r['paid_sum'] < $cost && $r['payment_id']) {
 			$surcharge = $cost - $r['amount'];
 			$not_enough = "not-enough";
 			$amount_color = 'text-danger';
@@ -114,9 +114,9 @@
 					<br><small>переплата</small>
 				</strong>
 				<?php } else { ?>
-				<strong class="text-success"><?php echo $r['amount'];?></strong>
+				<strong class="text-success"><?php echo $r['paid_sum'];?></strong>
 				<?php } ?>
-				<br><small><?php echo $r['comment']?></small>
+				<br><small><?php echo $r['payment_comment']?></small>
 			</td>
 			<td class="align-middle" data-label="" nowrap>
 				<div class="ctrlBtn" data-pid="<?php echo $r['reservation_id']?>">

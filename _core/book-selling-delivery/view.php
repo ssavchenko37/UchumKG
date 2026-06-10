@@ -60,8 +60,8 @@
 		$cost = $r['qty']*$r['price'];
 		$surcharge = 0;
 		$amount_color = 'text-success';
-		if ($r['amount'] < $cost) {
-			$surcharge = $cost - $r['amount'];
+		if ($r['paid_sum'] < $cost) {
+			$surcharge = $cost - $r['paid_sum'];
 			$not_enough = "not-enough";
 			$amount_color = 'text-danger';
 		}
@@ -90,7 +90,7 @@
 				<strong class="text-success"><?php echo number_format($cost, 2);?></strong>
 			</td>
 			<td class="align-middle text-center" data-label="Платеж">
-				<strong class="<?php echo $amount_color?>"><?php echo $r['amount'];?></strong>
+				<strong class="<?php echo $amount_color?>"><?php echo $r['paid_sum'];?></strong>
 				<small class="surcharge">доплата: <?php echo $surcharge?></small>
 				<br><small><?php echo $r['comment']?></small>
 			</td>

@@ -52,10 +52,8 @@
 
 		$not_enough = "default";
 		$fullPrice = $r['qty']*$r['price'];
-		$surcharge = 0;
 		$amount_color = 'text-success';
-		if ($r['amount'] < $fullPrice) {
-			$surcharge = $fullPrice - $r['amount'];
+		if ($r['paid_sum'] < $fullPrice) {
 			$not_enough = "not-enough";
 			$amount_color = 'text-danger';
 		}
@@ -79,7 +77,7 @@
 			</td>
 			<td class="align-middle text-center" data-label="Платеж">
 				<strong class="<?php echo $amount_color?>"><?php echo $r['paid_sum'];?></strong>
-				<small class="surcharge">доплата: <?php echo $surcharge?></small>
+				<small class="surcharge">доплата: <?php echo $r['remain_amount']?></small>
 				<small style="white-space: nowrap;"><?php echo $paid_date?></small>
 			</td>
 			<td class="align-middle" data-label="">

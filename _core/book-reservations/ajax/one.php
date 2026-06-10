@@ -7,6 +7,9 @@ $id = $_POST['pid'];
 $mode = $_POST['mod'];
 $reservation = $books = $branches = array();
 $part_total = 0;
+$check_hand = " checked";
+$check_capital = "";
+$check_region = "";
 
 if ($mode == "add") {
 	$sTTL = "Добавить бронь";
@@ -36,26 +39,24 @@ if ($mode == "edit") {
 	}
 
 	$sTTL = "Редактировать бронь";
-}
-$check_hand = " checked";
-$check_capital = "";
-$check_region = "";
-if ($reservation['where_go'] !== 'hand') {
-	$check_hand = "";
-	if ($reservation['where_go'] === 'capital') {
-		$check_capital = " checked";
-	} else {
-		$check_region = " checked";
+
+	if ($reservation['where_go'] !== 'hand') {
+		$check_hand = "";
+		if ($reservation['where_go'] === 'capital') {
+			$check_capital = " checked";
+		} else {
+			$check_region = " checked";
+		}
+	}
+	if ($reservation['paid_amount'] == 0) {
+		$reservation['remain_amount'] = $reservation['qty'] * $reservation['price'];
 	}
 }
-$remain_amount = $reservation['qty'] * $reservation['price'];
-if ($reservation['payment_status'] != "partial") {
-	$reservation['parts'][0]['amount'] = $reservation['amount'];
-	$reservation['parts'][0]['part_comment'] = $reservation['comment'];
-}
+
+// p($reservation);
 ?>
 
-<form method="post" enctype="multipart/form-data">
+<form id="action_form" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="pid" value="<?php echo $id?>">
 	<input type="hidden" id="mode" name="mode" value="<?php echo $mode?>">
 
@@ -115,22 +116,41 @@ if ($reservation['payment_status'] != "partial") {
 
 		<?php
 		if ($mode != "add") {
-			$reservation['comment'] = '';
-			$remain_amount = $reservation['remain_amount'];
-			foreach ($reservation['parts'] as $part) {
-				$part_total = $part_total + $part['amount'];
-				?>
-				<div class="row mb-3 border-bottom border-top">
-					<label class="col-5 col-sm-4 col-form-label text-md-end text-success">Оплачено:</label>
-					<div class="col-7 col-sm-2">
-						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['amount']?>">
+			
+			if (is_array($reservation['history'])) {
+				$reservation['comment'] = '';
+				$remain_amount = $reservation['remain_amount'];
+				foreach ($reservation['history'] as $part) {
+					$part_total = $part_total + $part['amount'];
+					?>
+					<div class="row mb-3 border-bottom border-top">
+						<label class="col-5 col-sm-4 col-form-label text-md-end text-success">Оплачено:</label>
+						<div class="col-7 col-sm-2">
+							<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['amount']?>">
+						</div>
+						<label class="col-5 col-sm-3 col-form-label text-md-end text-success">Дата платежа:</label>
+						<div class="col-7 col-sm-3">
+							<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['comment']?>">
+						</div>
 					</div>
-					<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end text-success">Дата платежа:</label>
-					<div class="col-7 col-sm-3">
-						<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $part['part_comment']?>">
+					<?php
+				}
+			} else {
+				if ($reservation['payment_status'] == "confirmed") {
+					?>
+					<div class="row mb-3 border-bottom border-top">
+						<label class="col-5 col-sm-4 col-form-label text-md-end text-success">Оплачено:</label>
+						<div class="col-7 col-sm-2">
+							<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $reservation['paid_amount']?>">
+						</div>
+						<label for="amount" class="col-5 col-sm-3 col-form-label text-md-end text-success">Дата платежа:</label>
+						<div class="col-7 col-sm-3">
+							<input type="text" readonly class="form-control-plaintext text-success" value="<?php echo $reservation['comment']?>">
+						</div>
 					</div>
-				</div>
-				<?php
+					<?php
+					$part_total = $reservation['paid_amount'];
+				}
 			}
 		}
 		?>
@@ -144,7 +164,7 @@ if ($reservation['payment_status'] != "partial") {
 				<label for="amount" class="col-12 col-sm-4 col-form-label text-md-end">Подтвержденная сумма:</label>
 				<div class="col-12 col-sm-8">
 					<input type="text" class="form-control" id="amount" name="amount" value="">
-					<small>Необходимая сумма: <span id="needed_amount"><?php echo $remain_amount?></span></small>
+					<small>Необходимая сумма: <span id="needed_amount"><?php echo $reservation['remain_amount']?></span></small>
 				</div>
 			</div>
 
