@@ -30,9 +30,9 @@
 		<tr class="rws <?php echo $active_class?> <?php echo $tr_class?>">
 			<td class="align-middle"><?php echo $q?></td>
 			<td class="align-middle"><?php echo $r['app_hash']?></td>
-			<td class="align-middle"><?php echo $r['apl_status']?></td>
+			<td class="align-middle"><?php echo $dict['appltype'][$r['']]?></td>
 			<td class="align-middle"><?php echo $r['sess_hash']?></td>
-			<td class="align-middle"><?php echo $group_statuses[$r['group_status']]?></td>
+			<td class="align-middle"><?php echo $dict['gstatus'][$r['group_code']]?></td>
 			<td class="align-middle">
 				<div class="tutor-ava-name">
 					<div class="ava-img"><img src="/<?php echo $ava_img?>" alt=""></div>

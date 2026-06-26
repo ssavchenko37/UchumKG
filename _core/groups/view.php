@@ -123,14 +123,14 @@
 				</div>
 			</td>
 			<td class="align-middle">
-				<?php echo $dict['format'][$r['format_id']]['title']?>,
-				<?php echo $dict['age'][$r['age_id']]['title']?>
+				<?php echo $dict['format'][$r['format_code']]?>,
+				<?php echo $dict['age'][$r['age_code']]?>
 				<br>
 				<?php echo $r['stime']?>,
-				<?php echo $dict['schedule'][$r['schedule_id']]['title']?>
+				<?php echo $dict['schedule'][$r['schedule_code']]?>
 			</td>
 			<td class="align-middle">
-				<?php echo $dict['address'][$r['address_id']]['title']?>
+				<?php echo $dict['address'][$r['address_code']]?>
 			</td>
 			<td class="align-middle">
 				<?php if ($participants[$r['group_id']] > 0) { ?>

@@ -722,6 +722,8 @@ class BookService
 				]
 			);
 
+			$this->db->prepare("UPDATE tl_bk_payments SET comment = ? WHERE payment_id = ?")->execute([$comment, $paymentId]);
+
 			$this->recalculatePayment($paymentId);
 
 			$this->logs->log(

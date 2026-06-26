@@ -1,5 +1,97 @@
 "use strict";
 
+const findHandlers = () => {
+	let timer;
+	const box = document.getElementById('duplicateBox');
+	const list = box.getElementsByClassName('duplicates__list')[0];
+	const close = box.getElementsByClassName('close-abs')[0];
+	const input_phone = document.getElementById('phone');
+	const findApplication = (e) => {
+		const phone = input_phone.value;
+
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			if (phone.length < 5) return;
+
+			fetch('/ajx/_pub' + window.location.pathname + 'find', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ phone })
+			})
+			.then(res => res.json())
+			.then(data => {
+				if (data.length > 0) {
+					let html = '';
+					data.forEach(user => {
+						html += `<div class="duplicates__item" data-stud="${user.stud_id}" data-who="${user.whowill}">`;
+						html += `<div class="duplicates__col">${user.last_name} ${user.first_name}</div>`;
+						html += `<div class="duplicates__col">${user.phone}</div>`;
+						html += `</div>`;
+					});
+					list.innerHTML = '';
+					box.classList.add('is-active');
+					list.innerHTML = html;
+				} else {
+					box.classList.remove('is-active');
+				}
+			});
+
+		}, 400);
+
+	}
+
+	const closeDuplicates = () => {
+		box.classList.remove('is-active');
+		list.innerHTML = "";
+		input_phone.value = "";
+	}
+
+	list.addEventListener('click', (e) => {
+		const item = (e.target.classList.contains('duplicates__item')) ? e.target: e.target.closest('.duplicates__item');
+		if (!item) return;
+		const cols = item.getElementsByClassName('duplicates__col');
+
+		document.getElementById('stud_id').value = item.dataset.stud;
+		document.getElementById('phone').value = cols[1].textContent;
+		let name = cols[0].textContent.split(" ");
+		console.log(item.dataset.who);
+		let lastName, firstName
+		if (item.dataset.who === 'child') {
+			document.getElementById('add_child').click();
+			lastName = document.querySelectorAll('[id^="child_last_name"]')[1];
+			firstName = document.querySelectorAll('[id^="child_first_name"]')[1];
+		} else {
+			lastName = document.getElementById('last_name');
+			firstName = document.getElementById('first_name')
+		}
+		console.log(lastName);
+		console.log(firstName);
+		lastName.value = name[0];
+		lastName.focus();
+		lastName.blur();
+		firstName.value = name[1];
+		firstName.focus();
+		firstName.blur();
+		
+		box.classList.remove('is-active');
+	});
+
+	close.addEventListener('click', closeDuplicates);
+	document.body.addEventListener('click', (e) => {
+		if (!document.getElementById('offer_form').contains(e.target) && box.classList.contains('is-active')) {
+			closeDuplicates();
+		}
+	});
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && box.classList.contains('is-active')) {
+			closeDuplicates();
+		}
+	});
+
+	document.getElementById('phone').addEventListener('keyup', findApplication);
+}
+docReady(findHandlers);
 
 const calcAge = (dateString) => {
 	const birthDate = new Date(dateString);
@@ -145,7 +237,7 @@ const signHandler = () => {
 					const pp_body = `
 						<div class="user-card">
 							<p>Пользователь <strong>${data.first_name} ${data.last_name}</strong></p>
-							<p>Оферта успешно подписана, теперь вы можете войти в ваш <a href="${window.location.hostname}/login/">личный кабинет</a>, для входа используйте ваш номер телефона.</p>
+							<p>Оферта успешно подписана, теперь вы можете войти в ваш <a href="/${window.location.hostname}/login/">личный кабинет</a>, для входа используйте ваш номер телефона.</p>
 							${child_txt}
 						</div>
 					`;

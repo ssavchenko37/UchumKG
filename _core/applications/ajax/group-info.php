@@ -2,12 +2,12 @@
 $id = $_POST['pid'];
 $mode = $_POST['mod'];
 
-$dict = $TL->dict();
+$dict = $TL->dict_codes();
 
 $tutors = $DB->selectCol('SELECT tutor_id AS ARRAY_KEY, name FROM ?_tutors');
 $groups = array();
-//status_id -> tl_dict; gstatus - forming,active
-$tmp_groups = $DB->select('SELECT * FROM ?_groups WHERE status_id IN(?a) AND is_active=? ORDER BY created DESC', [14,15], 1);
+//group_code -> tl_dict; gstatus - forming,active
+$tmp_groups = $DB->select('SELECT * FROM ?_groups WHERE group_code IN(?a) AND is_active=? ORDER BY created DESC', [14,15], 1);
 foreach ($tmp_groups as $g) {
 	$groups[$g['group_id']] = $g['sess_hash'] . ", " . $tutors[$g['tutor_id']];
 }

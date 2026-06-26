@@ -8,7 +8,7 @@ $mode = $_POST['mod'];
 
 $reservation_id = $DB->selectCell('SELECT reservation_id FROM ?_bk_payments WHERE payment_id=?', $id);
 $payment = $BS->getPayment($reservation_id);
-
+p($payment);
 if (!empty($payment['payment_id']) && $payment['expected_amount'] === null) {
 
 	$payment['history'][] = [
@@ -31,8 +31,8 @@ $fullPrice = $payment['qty']*$payment['price'];
 $surcharge = 0;
 $not_enough = false;
 $amount_color = 'text-success';
-if ($payment['amount'] < $fullPrice) {
-	$surcharge = $fullPrice - $payment['amount'];
+if ($payment['paid_amount'] < $fullPrice) {
+	$surcharge = $fullPrice - $payment['paid_amount'];
 	$not_enough = true;
 	$amount_color = 'text-danger';
 }

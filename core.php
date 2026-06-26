@@ -27,7 +27,6 @@ if (in_array($tldata['umod'], ["s", "pub"])) {
 	}
 }
 if (is_file(S_ROOT . "/_core/" . $sCore . "/main.php") && $globalMode) {
-
 	include S_ROOT . "/_core/" . $sCore . "/main.php";
 }
 if (is_file(S_ROOT . "/_core/" . $sMod . "/" . $sCore . "/main.php")) {

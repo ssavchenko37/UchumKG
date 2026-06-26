@@ -5,7 +5,7 @@ $mode = $_POST['mod'];
 $dict = $TL->dict();
 $group = $groups = [];
 $tutors = $DB->select('SELECT tutor_id AS ARRAY_KEY, name, ava_img FROM ?_tutors ORDER BY name');
-$participants = $DB->selectCol('SELECT group_id AS ARRAY_KEY, count(id) FROM ?_group_students GROUP BY group_id');
+
 
 $application = $DB->selectRow('SELECT S.* , A.*'
 	. ', G.sess_hash'
@@ -37,25 +37,25 @@ if (empty($application['group_id'])) {
 	$age_ids = ($application['whowill'] == "me") ? [5]: $age_ids;
 	$age_ids = ($application['whowill'] == "child") ? [6]: $age_ids;
 
-	$groups = $DB->select('SELECT *, DATE_FORMAT(startime, \'%H:%i\') AS stime FROM ?_groups G WHERE age_id IN(?a) AND schedule_id IN(?a) AND HOUR(startime) IN(?a)', $age_ids, $daysweek_result, $hours);
+	$groups = $DB->select('SELECT *, DATE_FORMAT(startime, \'%H:%i\') AS stime FROM ?_groups G WHERE age_code IN(?a) AND schedule_code IN(?a) AND HOUR(startime) IN(?a)', $age_ids, $daysweek_result, $hours);
 } else {
 	$group = $DB->selectRow('SELECT *, DATE_FORMAT(startime, \'%H:%i\') AS stime FROM ?_groups G WHERE group_id=?', $application['group_id']);
 	$groups[] = $group;
 }
 $tutor = $DB->selectRow('SELECT * FROM ?_tutors WHERE tutor_id=?', $group['tutor_id']);
-$group_type = ($dict['age'][$group['age_id']]['code'] == "CHL") ? "child": "adult";
+$group_type = ($dict['age'][$group['age_code']]['code'] == "CHL") ? "child": "adult";
 $ava_img = (is_file(S_AVA . DIRECTORY_SEPARATOR . $tutor['ava_img'])) ? S_AVA . DIRECTORY_SEPARATOR . $tutor['ava_img']: S_AVA . DIRECTORY_SEPARATOR . "no-ava.png";
 
 $details = [];
-if ($application['appl_type'] == 'pending') {
-	$details['title'] = $appltype[$application['appl_type']];
-}
-if ($application['appl_type'] == 'assigned') {    
-	$details['title'] = $appltype[$application['appl_type']] . " " . $application['sess_hash'];
-}
-if ($application['appl_type'] == 'enrolled') {
-	$details['title'] = $appltype[$application['appl_type']] . " в группу" . $application['sess_hash'];
-}
+// if ($application['appl_code'] == 'pending') {
+// 	$details['title'] = $appltype[$application['appl_code']];
+// }
+// if ($application['appl_code'] == 'assigned') {    
+// 	$details['title'] = $appltype[$application['appl_code']] . " " . $application['sess_hash'];
+// }
+// if ($application['appl_code'] == 'enrolled') {
+// 	$details['title'] = $appltype[$application['appl_code']] . " в группу" . $application['sess_hash'];
+// }
 
 ?>
 <form method="post" enctype="multipart/form-data">
@@ -70,7 +70,7 @@ if ($application['appl_type'] == 'enrolled') {
 		$application['mylevel'] = (empty($application['mylevel'])) ? "zero": $application['mylevel'];
 		if ($application['group_id'] > 0) {
 			?>
-			<p class="mt-1">Формат: <strong><?php echo $dict['format'][$group['format_id']]['title']?> • <?php echo $dict['age'][$group['age_id']]['title']?></strong></p>
+			<p class="mt-1">Формат: <strong><?php echo $dict['format'][$group['format_code']]['title']?> • <?php echo $dict['age'][$group['age_code']]['title']?></strong></p>
 			<div class="mt-1 admin-row admin-row--tutor">
 				<span>Преподаватель:</span>
 				<div class="group__tutor-ava">
@@ -79,10 +79,10 @@ if ($application['appl_type'] == 'enrolled') {
 				<strong><?php echo $tutor['name']?></strong>
 			</div>
 			<p class="mt-1">Расписание: 
-				<strong><?php echo $dict['schedule'][$group['schedule_id']]['title']?></strong>, 
+				<strong><?php echo $dict['schedule'][$group['schedule_code']]['title']?></strong>, 
 				<strong><?php echo date("H:i", strtotime($application['startime']))?></strong>
 			</p>
-			<p class="mt-1">Адрес: <strong><?php echo $dict['address'][$group['address_id']]['title']?></strong></p>
+			<p class="mt-1">Адрес: <strong><?php echo $dict['address'][$group['address_code']]['title']?></strong></p>
 			<p class="mt-1">Свободный мест: <strong><?php echo $places_left['qty']?></strong></p>
 			<?php
 		} else {
@@ -130,14 +130,14 @@ if ($application['appl_type'] == 'enrolled') {
 					</div>
 				</td>
 				<td class="align-middle">
-					<?php echo $dict['format'][$r['format_id']]['title']?>,
-					<?php echo $dict['age'][$r['age_id']]['title']?>
+					<?php echo $dict['format'][$r['format_code']]['title']?>,
+					<?php echo $dict['age'][$r['age_code']]['title']?>
 					<br>
 					<?php echo $r['stime']?>,
-					<?php echo $dict['schedule'][$r['schedule_id']]['title']?>
+					<?php echo $dict['schedule'][$r['schedule_code']]['title']?>
 				</td>
 				<td class="align-middle">
-					<?php echo $dict['address'][$r['address_id']]['title']?>
+					<?php echo $dict['address'][$r['address_code']]['title']?>
 				</td>
 				<td class="align-middle"><?php echo $how_many?></td>
 				<td class="align-middle">

@@ -33,7 +33,7 @@ if ($mode === 'order') {
 
 		$payment = $DB->selectRow('SELECT * FROM ?_bk_payments WHERE payment_id=?', $exist['payment_id']);
 
-		$orderId = $BS->sellFromReservation($exist['reservation_id'], $admin_id, $payment['amount'], $_POST['delivery_to'], $exist['payment_id']);
+		$orderId = $BS->sellFromReservation($exist['reservation_id'], $admin_id, $payment['paid_amount'], $_POST['delivery_to'], $exist['payment_id']);
 
 		$BS->commit();
 

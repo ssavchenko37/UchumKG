@@ -3,7 +3,8 @@ if (($_POST['mode'] ?? '')) {
 	include "action/action.php";
 }
 
-$records = $DB->selectCol('SELECT stud_id AS ARRAY_KEY, COUNT(*) FROM ?_group_students GROUP BY stud_id');
+$dict = $TL->dict_codes();
+
 $search_str = '';
 if (!empty($_POST['schstr'])) {
 	$schstr = trim($_POST['schstr']);
@@ -13,16 +14,15 @@ if (!empty($_POST['schstr'])) {
 	}
 }
 
-$applications = $DB->select('SELECT S.*, DATE_FORMAT(S.sign_date, \'%d.%m.%Y %H:%i\') AS odate'
-	. ', A.*, A.group_id AS gid'
-	. ', GS.group_id, G.sess_hash'
+$applications = $DB->select('SELECT A.*, DATE_FORMAT(A.created, \'%d.%m.%Y %H:%i\') AS created_date'
+	. ', G.sess_hash, DATE_FORMAT(G.startime, \'%H:%i\') AS stime, T.name AS tutor_name'
 	. ' FROM ?_applications A'
-	. ' INNER JOIN ?_students S ON A.stud_id=S.stud_id'
-	. ' LEFT JOIN ?_group_students GS ON A.appl_id=GS.appl_id'
-	. ' LEFT JOIN ?_groups G ON GS.group_id=G.group_id'
+	. ' LEFT JOIN ?_groups G ON A.group_id=G.group_id'
+	. ' LEFT JOIN ?_tutors T ON G.tutor_id=T.tutor_id'
 	. ' WHERE 1=1'
 	. ' {AND S.tel LIKE ? OR LOWER(S.name) LIKE ?}'
 	. ' ORDER BY A.created DESC'
 	, (empty($search_str)) ? DBSIMPLE_SKIP : $search_str, $search_str
 );
+
 // p($applications);

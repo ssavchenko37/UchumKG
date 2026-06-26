@@ -56,13 +56,6 @@ $tlreq  = $pathInfo[2];
 $TL = new TL_cli;
 
 //#......................Global ARRAYS
-$group_statuses = [
-	'forming'   => 'Набор',
-	'active'    => 'Активная',
-	'finished'  => 'Завершена',
-	'cancelled' => 'Отменена'
-];
-
 $where_translate = [
 	'hand'		=> 'Самовывоз',
 	'capital'	=> 'Бишкек',
@@ -76,6 +69,6 @@ $defect_statuses = [
 
 $who_will = ["me"=>"Только я","child"=>"Ребенок","together"=>"Вместе"];
 $my_level = ["zero"=>["С нуля","(алфавит)"],"basic"=>["Базовый","(понимаю, но не говорю)"],"intermediate"=>["Средний","(могу объясниться)"]];
-$studtype = ["new" =>"Новый", "returned"=>"Вернувшийся"];
-$appltype = ["pending" =>"Ожидающая заявка", "assigned"=>"Заявка на группу", "recorded"=>"Записан", "paused"=>"Приостановлен"];
-$group_user_status = ["listed"=>"Записан", "enrolled"=>"Зачислен", "paused"=>"Приостановлен"];
+// $studtype = ["new" =>"Новый", "returned"=>"Вернувшийся"];
+// $appltype = ["pending" =>"Ожидающая заявка", "assigned"=>"Заявка на группу", "enrolled"=>"Записан", "paused"=>"Приостановлен"];
+// $group_user_status = ["listed"=>"Записан", "enrolled"=>"Зачислен", "paused"=>"Приостановлен"];

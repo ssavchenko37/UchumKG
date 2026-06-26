@@ -2,7 +2,7 @@
 $id = $_POST['pid'];
 $mode = $_POST['mod'];
 
-$dict = $TL->dict_arrays();
+$dict = $TL->dict_codes();
 $tutors = $DB->selectCol('SELECT tutor_id AS ARRAY_KEY, name FROM ?_tutors ORDER BY name');
 
 $group = array();
@@ -57,35 +57,35 @@ if ($mode == "edit") {
 		</div>
 
 		<div class="row mb-3">
-			<label for="schedule_id" class="col-sm-3 col-form-label text-end">Расписание:</label>
+			<label for="schedule_code" class="col-sm-3 col-form-label text-end">Расписание:</label>
 			<div class="col-sm-4">
-				<select class="form-select form-select-sm" id="schedule_id" name="schedule_id">
+				<select class="form-select form-select-sm" id="schedule_code" name="schedule_code">
 					<option value=""> -- Выберите расписание </option>
-					<?php echo getOptionsK($group['schedule_id'], $dict['schedule'])?>
+					<?php echo getOptionsK($group['schedule_code'], $dict['schedule'])?>
 				</select>
 			</div>
-			<label for="format_id" class="col-sm-1 col-form-label text-end">Формат:</label>
+			<label for="format_code" class="col-sm-1 col-form-label text-end">Формат:</label>
 			<div class="col-sm-4">
-				<select class="form-select form-select-sm" id="format_id" name="format_id">
+				<select class="form-select form-select-sm" id="format_code" name="format_code">
 					<option value=""> -- Выберите формат </option>
-					<?php echo getOptionsK($group['format_id'], $dict['format'])?>
+					<?php echo getOptionsK($group['format_code'], $dict['format'])?>
 				</select>
 			</div>
 		</div>
 
 		<div class="row mb-3">
-			<label for="age_id" class="col-sm-3 col-form-label text-end">Возраст:</label>
+			<label for="age_code" class="col-sm-3 col-form-label text-end">Возраст:</label>
 			<div class="col-sm-4">
-				<select class="form-select form-select-sm" id="age_id" name="age_id">
+				<select class="form-select form-select-sm" id="age_code" name="age_code">
 					<option value=""> -- Выберите возраст </option>
-					<?php echo getOptionsK($group['age_id'], $dict['age'])?>
+					<?php echo getOptionsK($group['age_code'], $dict['age'])?>
 				</select>
 			</div>
-			<label for="address_id" class="col-sm-1 col-form-label text-end">Адрес:</label>
+			<label for="address_code" class="col-sm-1 col-form-label text-end">Адрес:</label>
 			<div class="col-sm-4">
-				<select class="form-select form-select-sm" id="address_id" name="address_id">
+				<select class="form-select form-select-sm" id="address_code" name="address_code">
 					<option value=""> -- Выберите адрес </option>
-					<?php echo getOptionsK($group['address_id'], $dict['address'])?>
+					<?php echo getOptionsK($group['address_code'], $dict['address'])?>
 				</select>
 			</div>
 		</div>
@@ -114,10 +114,10 @@ if ($mode == "edit") {
 		</div>
 
 		<div class="row mb-3">
-			<label for="status_id" class="col-sm-3 col-form-label text-end">Статус группы:</label>
+			<label for="group_code" class="col-sm-3 col-form-label text-end">Статус группы:</label>
 			<div class="col-sm-9">
-				<select class="form-select" id="status_id" name="status_id">
-					<?php echo getOptionsK($group['status_id'], $dict['gstatus'])?>
+				<select class="form-select" id="group_code" name="group_code">
+					<?php echo getOptionsK($group['group_code'], $dict['gstatus'])?>
 				</select>
 			</div>
 		</div>

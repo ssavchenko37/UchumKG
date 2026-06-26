@@ -12,15 +12,26 @@ const dateHandler = () => {
 	}
 	flatpickr(created, {
 		allowInput: true,
+		allowInput: true,
 		enableTime: false,
 		dateFormat: "Y-m-d",
 		locale: "ru",
+		onChange: function(selectedDates, dateStr, instance) {
+
+			if (!selectedDates.length) {
+				return;
+			}
+			const selectedDate = selectedDates[0];
+			const dayOfWeek = selectedDate.getDay();
+			scheduleFind(dayOfWeek);
+		}
 	});
 
 	if (typeof startime.value === "string" && startime.value.length > 0) {
 		timegroup = startime.value;
 	}
 	flatpickr(startime, {
+		allowInput: true,
 		enableTime: true,
 		noCalendar: true,
 		dateFormat: "H:i",
@@ -28,6 +39,15 @@ const dateHandler = () => {
 		time_24hr: true
 	});
 };
+
+const scheduleFind = (dayOfWeek) => {
+	const schedule_code = document.getElementById('schedule_code');
+	const isEven = (dayOfWeek % 2) === 0;
+	let scheduleCode = (isEven) ? "EVN": "ODD";
+	schedule_code.value = scheduleCode;
+	const event = new Event('change', { bubbles: true });
+	schedule_code.dispatchEvent(event);
+}
 
 const codeGenerator = () => {
 	const hash_box = document.getElementById('sess_hash'); 
@@ -37,7 +57,7 @@ const codeGenerator = () => {
 
 	const checkVerifying = () => {
 		let is = false;
-		['created', 'startime', 'tutor_id', 'schedule_id', 'format_id', 'age_id', 'address_id'].forEach(id => {
+		['created', 'startime', 'tutor_id', 'schedule_code', 'format_code', 'age_code', 'address_code'].forEach(id => {
 			const val = document.getElementById(id).value;
 			is = (val === '') ? false: true;
 		});
@@ -48,9 +68,9 @@ const codeGenerator = () => {
 
 	const buildCode = () => {
 		const tutor_id = document.getElementById('tutor_id').value;
-		const schedule_id = document.getElementById('schedule_id').value;
-		const age_id = document.getElementById('age_id').value;
-		const format_id = document.getElementById('format_id').value;
+		const schedule_code = document.getElementById('schedule_code').value;
+		const age_code = document.getElementById('age_code').value;
+		const format_code = document.getElementById('format_code').value;
 
 		let date_path = 0;
 		let time_path = 0;
@@ -66,10 +86,10 @@ const codeGenerator = () => {
 			mode: 'build_code',
 			date_path: date_path,
 			time_path: time_path,
-			format_id: format_id,
-			age_id: age_id,
+			format_code: format_code,
+			age_code: age_code,
 			tutor_id: tutor_id,
-			schedule_id: schedule_id
+			schedule_code: schedule_code
 		};
 		fetch('/ajx' + window.location.pathname + 'handlers', {
 			method: 'POST',
@@ -94,10 +114,10 @@ const codeGenerator = () => {
 	startime.addEventListener('input', () => {
 		buildCode();
 	});
-	document.getElementById('address_id').addEventListener('change', function () {
+	document.getElementById('address_code').addEventListener('change', function () {
 		checkVerifying();
 	});
-	['tutor_id', 'schedule_id', 'format_id', 'age_id'].forEach(id => {
+	['tutor_id', 'schedule_code', 'format_code', 'age_code'].forEach(id => {
 		document.getElementById(id).addEventListener('change', function () {
 			buildCode();
 		});

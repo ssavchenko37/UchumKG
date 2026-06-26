@@ -172,59 +172,59 @@ const tlasideClose = () => {
 			doClose();
 		}
 	});
-	if (window.innerWidth <= 1024) {
-		const panel = tlaside.getElementsByClassName('tlaside__block')[0];
-		let startX = 0
-		let currentX = 0
-		let isDragging = false
+	// if (window.innerWidth <= 1024) {
+	// 	const panel = tlaside.getElementsByClassName('tlaside__block')[0];
+	// 	let startX = 0
+	// 	let currentX = 0
+	// 	let isDragging = false
 
-		panel.addEventListener('touchstart', e => {
+	// 	panel.addEventListener('touchstart', e => {
 
-			startX = e.touches[0].clientX
-			isDragging = true
+	// 		startX = e.touches[0].clientX
+	// 		isDragging = true
 
-		})
+	// 	})
 
-		panel.addEventListener('touchmove', e => {
+	// 	panel.addEventListener('touchmove', e => {
 
-			if (!isDragging)
-				return
+	// 		if (!isDragging)
+	// 			return
 
-			currentX = e.touches[0].clientX
+	// 		currentX = e.touches[0].clientX
 
-			const diff = currentX - startX
+	// 		const diff = currentX - startX
 
-			if (diff > 0) {
+	// 		if (diff > 0) {
 
-				panel.style.transform = `translateX(${diff}px)`
+	// 			panel.style.transform = `translateX(${diff}px)`
 
-			}
+	// 		}
 
-		})
+	// 	})
 
-		panel.addEventListener('touchend', () => {
+	// 	panel.addEventListener('touchend', () => {
 
-			if (!isDragging)
-				return
+	// 		if (!isDragging)
+	// 			return
 
-			isDragging = false
+	// 		isDragging = false
 
-			const diff = currentX - startX
+	// 		const diff = currentX - startX
 
-			// если свайпнули достаточно
-			if (diff > 120) {
-				tlaside.classList.remove('show-block1');
-				setTimeout(() => {
-					tlaside.classList.remove('show');
-					document.body.classList.remove('no-scroll');
-				}, 500);
-				panel.style.transform = ''
-			} else {
-				panel.style.transform = ''
-			}
+	// 		// если свайпнули достаточно
+	// 		if (diff > 120) {
+	// 			tlaside.classList.remove('show-block1');
+	// 			setTimeout(() => {
+	// 				tlaside.classList.remove('show');
+	// 				document.body.classList.remove('no-scroll');
+	// 			}, 500);
+	// 			panel.style.transform = ''
+	// 		} else {
+	// 			panel.style.transform = ''
+	// 		}
 
-		})
-	}
+	// 	})
+	// }
 }
 const getViewer = (formData) => {
 	let pathname = window.location.pathname;

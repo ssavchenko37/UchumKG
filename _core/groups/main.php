@@ -3,9 +3,7 @@ if (($_POST['mode'] ?? '')) {
 	include "action/action.php";
 }
 
-$dict = $TL->dict();
-
-
+$dict = $TL->dict_codes();
 
 if ($tldata['umod'] === "t") {
 	$tutors = $DB->select('SELECT tutor_id AS ARRAY_KEY, name, ava_img FROM ?_tutors WHERE tutor_id=?', $tldata['id']);

@@ -2,7 +2,7 @@
 $id = $_POST['pid'];
 
 foreach ($_REQUEST as $rKey => $rVal) {
-	if (in_array($rKey, array("tutor_id","sess_hash","format_id","age_id","address_id","schedule_id","status_id","usrqty","duration","level","startime","created"))) {
+	if (in_array($rKey, array("tutor_id","sess_hash","format_code","age_code","address_code","schedule_code","group_code","usrqty","duration","level","startime","created"))) {
 		$ins[$rKey] = trim($rVal);
 	}
 }

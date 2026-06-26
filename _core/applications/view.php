@@ -121,14 +121,13 @@
 	<thead>
 	<tr class="fixed-row sticky-tr">
 		<th>#</th>
-		<th class="w-20">ФИО</th>
-		<th>№ ученика</th>
-		<th>Телефон</th>
+		<th class="w-15">ФИО</th>
 		<th>Возраст</th>
-		<th class="w-20">Отметки</th>
-		<th>Оферта</th>
-		<th>Переход</th>
-		<th>История</th>
+		<th>Телефон</th>
+		<th>Группа</th>
+		<th class="w-15">Анкета</th>
+		<th>Комментарий</th>
+		<th>Действия</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -137,41 +136,44 @@
 	foreach ($applications as $r) {
 		$tr_class = ($id == $r['appl_id']) ? "table-success": "";
 		$request = $TL->request_encode('stud_id', $r['stud_id']);
-		$offer = ($r['sign_offer'] > 0) ? "<small>" . $r['odate'] . "</small>" : "<small class=\"text-danger\">Нет</small>";
 		?>
 		<tr class="rws <?php echo $tr_class?>" data-meta=<?php echo $meta?>>
 			<td class="align-middle"><?php echo $q?></td>
-			<td class="align-middle" title="<?php echo $r['stud_id']?>"><?php echo buildFIO($r)?></td>
-			<td class="align-middle"><?php echo $r['app_hash']?></td>
-			<td class="align-middle"><?php echo $r['phone']?></td>
+			<td class="align-middle"><?php echo buildFIO($r)?></td>
 			<td class="align-middle text-center"><?php echo $r['age']?></td>
+			<td class="align-middle"><?php echo $r['phone']?></td>
 			<td class="align-middle">
 				<div class="ctrlBtn" data-pid="<?php echo $r['appl_id']?>">
-					<button class="btn btn-link btn-xs" type="button" data-mod="details" data-page="details">
-						<?php echo $appltype[$r['appl_type']]?><br>
-						<?php echo $studtype[$r['stud_type']]?>; <?php echo $my_level[$r['mylevel']][0]?>; <?php echo $who_will[$r['whowill']]?><br>
-						<?php if ($r['appl_type'] === "pending") {
-							echo $r['daysweek'] . "; " . $r['coursetime'];
-						} ?>
-					</button>
-				</div>
-			</td>
-			<td class="align-middle"><?php echo$offer?></td>
-			<td class="align-middle">
-				<div class="ctrlBtn" data-pid="<?php echo $r['appl_id']?>">
-					<?php if ($r['group_id'] > 0) { ?>
-						<button class="btn btn-success btn-xs" type="button" data-mod="link" data-page="link-group"><?php echo $r['sess_hash']?></button>
-					<?php } else { ?>
-						<button class="btn btn-secondary btn-sm" type="button" data-group-id="<?php echo $r['gid']?>" data-mod="link" data-page="link-group">не задан</button>
+					<?php echo $dict['appltype'][$r['appl_code']]?>
+					<?php if (!empty($r['sess_hash'])) { ?>
+					<br><?php echo $r['sess_hash']?>
+					<span class="comment"><?php echo $r['tutor_name']?> / <?php echo $r['stime']?></span>
 					<?php } ?>
 				</div>
 			</td>
 			<td class="align-middle">
-				<?php if ($records[$r['stud_id']] > 0) { ?>
-					<a href="/history/?<?php echo $request?>" class="btn btn-sm btn-secondary">
-						<i class="fa-regular fa-rectangle-list"></i>&nbsp;&nbsp;<strong><?php echo $records[$r['stud_id']]?></strong>
-					</a>
-				<?php } ?>
+				<span class="comment">
+					<!-- Заявитель: <?php echo $dict['studtype'][$r['stud_code']]?>;<br> -->
+					Ученик: <?php echo $who_will[$r['whowill']]?>;<br>
+					Уровень: <?php echo $my_level[$r['mylevel']][0]?>; 
+					<?php if ($r['appl_code'] === "pending") {
+						echo "<br>" . $r['daysweek'] . " / " . $r['coursetime'];
+					} ?>
+				</span>
+			</td>
+			<td class="align-middle"><span class="comment"><?php echo $r['comment']?></span></td>
+			<td class="align-middle">
+				<button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+				<div class="dropdown-menu dropdown-menu-end ctrlBtn" data-pid="<?php echo $r['appl_id']?>">
+					<?php if ($r['appl_code'] === "approved") { ?>
+						<button class="dropdown-item text-secondary" type="button" data-mod="initial" data-page="accept">Вернуть</button>
+					<?php } else { ?>
+						<button class="dropdown-item text-success" type="button" data-mod="approved" data-page="accept">Завершить</button>
+					<?php } ?>
+					
+					<button class="dropdown-item text-primary" type="button" data-mod="edit" data-page="one">Редактировать</button>
+					<button class="dropdown-item text-danger" type="button" data-mod="delete" data-page="delete">Удалить</button>
+				</div>
 			</td>
 		</tr>
 		<?php

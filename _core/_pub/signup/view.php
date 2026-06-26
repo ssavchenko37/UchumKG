@@ -24,14 +24,14 @@
 		<div class="page__groups scroll-box">
 			<div class="page__groups-body" id="group_type_pane">
 				<?php
-				foreach ($result as $r) {
+				foreach ($result as $k=>$r) {
 					?>
 					<div class="groups-title"><span class="h4"><?php echo $r['name']?></span><i></i></div>
 					<div class="groups-list">
 						<?php
 						foreach ($r['groups'] as $g) {
 							$tutor = $tutors[$g['tutor_id']];
-							$group_type = ($dict['age'][$g['age_id']]['code'] == "CHL") ? "child": "adult";
+							$group_type = ($g['age_code'] == "CHL") ? "child": "adult";
 							$ava_img = (is_file(S_AVA . DIRECTORY_SEPARATOR . $tutor['ava_img'])) ? S_AVA . DIRECTORY_SEPARATOR . $tutor['ava_img']: S_AVA . DIRECTORY_SEPARATOR . "no-ava.png";
 							$places_left['qty'] = $g['usrqty'] - $already[$g['group_id']];
 							$places_left['class_prefix'] = ($places_left['qty'] > 5) ? "success": "danger";
@@ -39,7 +39,7 @@
 							?>
 							<div class="groups-item group" data-group-type="<?php echo $group_type?>">
 								<div class="group__format group__format--<?php echo $group_type?>">
-									<div><?php echo $dict['format'][$g['format_id']]['title']?> • <?php echo $dict['age'][$g['age_id']]['title']?></div>
+									<div><?php echo $dict['format'][$g['format_code']]?> • <?php echo $dict['age'][$g['age_code']]?></div>
 								</div>
 								<div class="group__main">
 									<div class="group__tutor">
@@ -53,13 +53,13 @@
 										<div class="group__meta-item">
 											<em><i class="fa-regular fa-calendar"></i></em>
 											<div>
-												<strong><?php echo $dict['schedule'][$g['schedule_id']]['title']?></strong>
+												<strong><?php echo $dict['schedule'][$g['schedule_code']]?></strong>
 												<time><?php echo date("H:i", strtotime($g['startime']))?></time>
 											</div>
 										</div>
 										<div class="group__meta-item">
 											<em><i class="fa-solid fa-location-dot"></i></em>
-											<span><?php echo $dict['address'][$g['address_id']]['title']?></span>
+											<span><?php echo $dict['address'][$g['address_code']]?></span>
 										</div>
 									</div>
 								</div>
@@ -79,8 +79,8 @@
 										</div>
 										<div class="pp-preview__info">
 											<div class="pp-preview__title"><?php echo $tutor['name']?></div>
-											<div class="pp-preview__text"><?php echo $dict['format'][$g['format_id']]['title']?> • <?php echo $dict['age'][$g['age_id']]['title']?></div>
-											<div class="pp-preview__time"><?php echo $dict['schedule'][$g['schedule_id']]['title']?> в <?php echo date("H:i", strtotime($g['startime']))?></div>
+											<div class="pp-preview__text"><?php echo $dict['format'][$g['format_code']]?> • <?php echo $dict['age'][$g['age_code']]?></div>
+											<div class="pp-preview__time"><?php echo $dict['schedule'][$g['schedule_code']]?> в <?php echo date("H:i", strtotime($g['startime']))?></div>
 										</div>
 									</div>
 								</div>

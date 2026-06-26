@@ -79,8 +79,11 @@ function cleanPhone1($phone) {
 	return substr($phone, -9);
 }
 
-function cleanPhone($phone) {
+function cleanPhone(string $phone) {
 	$phone = preg_replace('/[^0-9+]/', '', $phone);
+	if (strlen($phone) < 10) {
+		$phone = '+996' . $phone;
+	}
 	if (strpos($phone, '+') === 0) {
 		return $phone;
 	}

@@ -1,5 +1,6 @@
 <?php
 //p($_POST);
+$appl = $DB->selectRow('SELECT * FROM ?_applications WHERE appl_id=?', $_POST['pid']);
 
 if ($_POST['mode'] == "add_application") {
 	$date = new DateTime();
@@ -28,26 +29,33 @@ if ($_POST['mode'] == "add_application") {
 
 		$appl['stud_id'] = $stud_id;
 		$appl['sutd_type'] = (empty($_POST['stud_id'])) ? "new": "returned";
-		$appl['appl_type'] = 'pending';
 		$appl['app_hash'] = $hash;
 		$appl['created'] = date('Y-m-d H:i:s');
 		$DB->query('INSERT INTO ?_applications (?#) VALUES (?a)', array_keys($appl), array_values($appl));
 	}
 }
 
+if ($_POST['mode'] === "approved") {
+	$upd_status['appl_code'] = "approved";
+	$DB->query('UPDATE ?_applications SET ?a WHERE appl_id=?', $upd_status, $appl['appl_id']);
+}
+if ($_POST['mode'] === "initial") {
+	$upd_status['appl_code'] = ($appl['group_id'] > 0)? "assigned": "pending";
+	$DB->query('UPDATE ?_applications SET ?a WHERE appl_id=?', $upd_status, $appl['appl_id']);
+}
+
 if ($_POST['mode'] === "link") {
 	$exist = $DB->selectRow('SELECT * FROM ?_group_students WHERE group_id=? AND stud_id=? AND appl_id=?', $_POST['group_id'], $_POST['stud_id'], $_POST['pid']);
-	$appl = $DB->selectRow('SELECT * FROM ?_applications WHERE appl_id=?', $_POST['pid']);
 	
 	if (count($exist) == 0) {
-		$ins['group_id'] = $_POST['group_id'];
-		$ins['stud_id'] = $_POST['stud_id'];
-		$ins['appl_id'] = $_POST['pid'];
-		$ins['assigned'] = date('Y-m-d H:i:s');
-		$ins['status'] = "listed";
-		$DB->query('INSERT INTO ?_group_students (?#) VALUES (?a)', array_keys($ins), array_values($ins));
+		// $ins['group_id'] = $_POST['group_id'];
+		// $ins['stud_id'] = $_POST['stud_id'];
+		// $ins['appl_id'] = $_POST['pid'];
+		// $ins['assigned'] = date('Y-m-d H:i:s');
+		// $ins['status'] = "listed";
+		// $DB->query('INSERT INTO ?_group_students (?#) VALUES (?a)', array_keys($ins), array_values($ins));
 		
-		$upd_appl['appl_type'] = "recorded";
+		// $upd_appl['appl_code'] = "recorded";
 		//$DB->query('UPDATE ?_applications SET ?a WHERE appl_id=?', $upd_appl, $_POST['pid']);
 	}
 }

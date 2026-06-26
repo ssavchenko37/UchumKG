@@ -78,7 +78,7 @@ class TL_cli
 		}
 		return $dict;
 	}
-	public function dict_arrays(): array
+	public function dict_ids(): array
 	{
 		$dict = array();
 		$tmp = $this->db->select('SELECT * FROM ?_dict ORDER BY type, sort');
@@ -87,11 +87,20 @@ class TL_cli
 		}
 		return $dict;
 	}
-
-	public function tutorsName(): array
+	public function dict_codes(): array
 	{
-		return $this->db->selectCol('SELECT tutor_id AS ARRAY_KEY, CONCAT(tutor_id, ") ", tutor_fullname) FROM ?_tutor ORDER BY tutor_fullname');
+		$dict = array();
+		$tmp = $this->db->select('SELECT * FROM ?_dict ORDER BY type, sort');
+		foreach ($tmp as $r) {
+			$dict[$r['type']][$r['code']] = $r['title'];
+		}
+		return $dict;
 	}
+
+	// public function tutorsName(): array
+	// {
+	// 	return $this->db->selectCol('SELECT tutor_id AS ARRAY_KEY, CONCAT(tutor_id, ") ", tutor_fullname) FROM ?_tutor ORDER BY tutor_fullname');
+	// }
 
 	// public function group($group_id): array
 	// {
@@ -116,14 +125,14 @@ class TL_cli
 	// 		, ( $stud_id ) ? $stud_id : $this->stud_id
 	// 	);
 	// }
-	public function paymentBYdate(string $datestr): array
-	{
-		return $this->db->select('SELECT R.phone, R.where_go, R.delivery_to
-			, P.amount, P.method, P.comment, P.status
-			FROM ?_bk_payments P 
-			JOIN ?_bk_reservations R ON P.reservation_id=R.reservation_id
-			WHERE P.comment=?'
-			, $datestr
-		);
-	}
+	// public function paymentBYdate(string $datestr): array
+	// {
+	// 	return $this->db->select('SELECT R.phone, R.where_go, R.delivery_to
+	// 		, P.amount, P.method, P.comment, P.status
+	// 		FROM ?_bk_payments P 
+	// 		JOIN ?_bk_reservations R ON P.reservation_id=R.reservation_id
+	// 		WHERE P.comment=?'
+	// 		, $datestr
+	// 	);
+	// }
 }

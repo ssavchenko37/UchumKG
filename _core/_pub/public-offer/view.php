@@ -160,6 +160,7 @@
 		<form id="offer_form" class="scroll-box" onsubmit="return false">
 			<div class="popup__body popup__body--sections">
 				<input type="hidden" id="mode" name="mode" value="create_consent">
+				<input type="hidden" id="stud_id" name="stud_id" value="">
 
 				<div class="ppsection">
 					<div class="ppsection__header">
@@ -170,20 +171,26 @@
 					<div class="ppsection__content">
 						<div class="popup__row">
 							<div class="popup__col2">
-								<input type="text" class="form-control form-control-lg" id="first_name" name="first_name" required>
-								<label for="first_name" class="placehold">Имя</label>
+								<input type="text" class="form-control form-control-lg" id="phone" name="phone" required>
+								<label for="phone" class="placehold">Номер телефона</label>
+								<div class="duplicates duplicates--offer is-active" id="duplicateBox">
+									<div class="close-abs">
+										<button type="button" class="btn-close close-card-body" role="button"></button>
+									</div>
+									<div class="duplicates__list"><div class="duplicates__item" data-stud="8"><div class="duplicates__col">Александр Морозов null</div><div class="duplicates__col">21.04.26.00008</div><div class="duplicates__col">555789017</div><div class="duplicates__col">null</div></div></div>
+								</div>
 							</div>
 							<div class="popup__col2">
 								<input type="text" class="form-control form-control-lg" id="last_name" name="last_name" required>
 								<label for="last_name" class="placehold" class="placeholder">Фамилия</label>
 							</div>
 							<div class="popup__col2">
-								<input type="text" class="form-control form-control-lg" id="patronymic" name="patronymic">
-								<label for="patronymic" class="placehold" class="placeholder">Отчество <small>(не обязательно)</small></label>
+								<input type="text" class="form-control form-control-lg" id="first_name" name="first_name" required>
+								<label for="first_name" class="placehold">Имя</label>
 							</div>
 							<div class="popup__col2">
-								<input type="text" class="form-control form-control-lg" id="phone" name="phone" required>
-								<label for="phone" class="placehold">Номер телефона</label>
+								<input type="text" class="form-control form-control-lg" id="patronymic" name="patronymic">
+								<label for="patronymic" class="placehold" class="placeholder">Отчество <small>(не обязательно)</small></label>
 							</div>
 							<div class="popup__col2">
 								<input type="text" class="form-control form-control-lg calc-age" id="birthday" name="birthday" required>
